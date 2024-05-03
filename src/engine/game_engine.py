@@ -49,7 +49,9 @@ class GameEngine:
         self.delta_time = self.clock.get_time() / 1000.0
 
     def _process_events(self):
-        pass
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                self.is_running = False
 
     def _update(self):
         system_background(self.ecs_world, self.screen, self.delta_time)
