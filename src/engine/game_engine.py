@@ -39,7 +39,9 @@ class GameEngine:
         pass
 
     def _process_events(self):
-        pass
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                self.is_running = False
 
     def _update(self):
         pass
