@@ -65,7 +65,6 @@ def create_title_logo(ecs_world:esper.World, interface_data: dict):
 
 
 def create_player(ecs_world: esper.World, player_data: dict):
-    #player_config = ServiceLocator.images_service.get("assets/cfg/player.json")
     surface = ServiceLocator.images_service.get(player_data["image"])
     pos = pygame.Vector2(player_data["start_point"]["x"],  
                          player_data["start_point"]["y"])
@@ -77,7 +76,8 @@ def create_player(ecs_world: esper.World, player_data: dict):
     player_v = ecs_world.component_for_entity(player_entity, CVelocity)
     player_tag = ecs_world.component_for_entity(player_entity, CTagPlayer)
     player_status = ecs_world.component_for_entity(player_entity, CPlayerStatus)
-    return (player_entity, player_tr, player_v, player_tag, player_status)
+    player_surface = ecs_world.component_for_entity(player_entity, CSurface)
+    return (player_entity, player_tr, player_v, player_tag, player_status, player_surface)
 
 
 def create_input_player(ecs_world: esper.World):
@@ -94,17 +94,20 @@ def create_input_player(ecs_world: esper.World):
     ecs_world.add_component(pause_game, CInputCommand("PAUSE_GAME", pygame.K_p))
 
 
-def create_bullet(ecs_world: esper.World, mouse_position: pygame.Vector2, player_position: pygame.Vector2, player_size: pygame.Vector2,bullet_data: dict):
+def create_bullet(ecs_world: esper.World, player_position: pygame.Vector2, player_size: pygame.Vector2,bullet_data: dict):
+    
     bullet_surface = ServiceLocator.images_service.get(bullet_data['image'])
     bullet_size = bullet_surface.get_rect().size
 
     position = pygame.Vector2(player_position.x + (player_size[0]/2) - (bullet_size[0]/2) , 
                               player_position.y + (player_size[1]/2) - (bullet_size[1]/2))
     
-    direction = (mouse_position - player_position).normalize()
-    
-    vel = direction * bullet_data["velocity"]
+    #direction = (pygame.Vector2(0,0) - player_position).normalize()
+    #vel = direction * bullet_data["velocity"]
 
+    vel = pygame.Vector2(bullet_data["velocity"]["x"],
+                           bullet_data["velocity"]["y"])
+    
     bullet_entity = create_sprite(ecs_world,position,vel,bullet_surface)
     ecs_world.add_component(bullet_entity, CTagBullet())
     ServiceLocator.sounds_service.play(bullet_data["sound"])

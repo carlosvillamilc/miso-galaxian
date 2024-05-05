@@ -1,0 +1,13 @@
+{
+    "sound": "assets/snd/player_shoot.ogg",
+    "image": "assets/img/bullet.png",
+    "velocity": {
+        "x": 0,
+        "y": -425
+    },
+
+    "image_special": "assets/img/bullet_special.png",
+    "sound_special": "assets/snd/laser_special.ogg",
+    "velocity_special": 100,
+    "charge_time_special": 5
+}

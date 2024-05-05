@@ -14,7 +14,12 @@ class GameScene(Scene):
     def do_create(self):
         print("GameScene created")
         create_background(self.ecs_world, self._game_engine.starfield_cfg)
-        self.pl_entity, self.pl_tr, self.pl_v, self.pl_tg, self.pl_st = create_player(self.ecs_world, self._game_engine.player_cfg)
+        (self.player_entity, 
+         self.player_transform, 
+         self.player_vel, 
+         self.player_tag, 
+         self.player_status,
+         self.player_surface) = create_player(self.ecs_world, self._game_engine.player_cfg)
         create_input_player(self.ecs_world)
 
     def do_update(self, delta_time):
@@ -30,16 +35,17 @@ class GameScene(Scene):
         #breakpoint()
         if action.name == "PLAYER_LEFT":
             if action.phase == CommandPhase.START:
-                self.pl_v.vel.x -= self.pl_tg.input_speed
+                self.player_vel.vel.x -= self.player_tag.input_speed
             else:
-                self.pl_v.vel.x += self.pl_tg.input_speed
+                self.player_vel.vel.x += self.player_tag.input_speed
         if action.name == "PLAYER_RIGHT":
             if action.phase == CommandPhase.START:
-                self.pl_v.vel.x += self.pl_tg.input_speed
+                self.player_vel.vel.x += self.player_tag.input_speed
             else:
-                self.pl_v.vel.x -= self.pl_tg.input_speed
-        if action.name == "FIRE_NORMAL" and action.phase == CommandPhase.START:
-            create_bullet(self.ecs_world, c_input.mouse_position, self._player_transform.pos, self._player_surface.area.size, self.bullet_data)
+                self.player_vel.vel.x -= self.player_tag.input_speed
+        if action.name == "PLAYER_FIRE" and action.phase == CommandPhase.START:
+            #breakpoint()
+            create_bullet(self.ecs_world,self.player_transform.pos, self.player_surface.area.size, self._game_engine.bullet_cfg)
 
     def do_process_events(self, event: pygame.Event) -> None:
         #breakpoint()

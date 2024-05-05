@@ -56,6 +56,8 @@ class GameEngine:
             self.starfield_cfg = json.load(starfield_file)
         with open(path + "/player.json", "r") as player_file:
             self.player_cfg = json.load(player_file)
+        with open(path + "/bullet.json", "r") as bullet_file:
+            self.bullet_cfg = json.load(bullet_file)
 
     async def run(self, start_scene_name: str) -> None:
         self._current_scene = self._scenes[start_scene_name]
