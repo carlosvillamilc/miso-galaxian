@@ -102,8 +102,6 @@ def create_bullet(ecs_world: esper.World, player_position: pygame.Vector2, playe
     position = pygame.Vector2(player_position.x + (player_size[0]/2) - (bullet_size[0]/2) , 
                               player_position.y + (player_size[1]/2) - (bullet_size[1]/2))
     
-    #direction = (pygame.Vector2(0,0) - player_position).normalize()
-    #vel = direction * bullet_data["velocity"]
 
     vel = pygame.Vector2(bullet_data["velocity"]["x"],
                            bullet_data["velocity"]["y"])
@@ -111,3 +109,33 @@ def create_bullet(ecs_world: esper.World, player_position: pygame.Vector2, playe
     bullet_entity = create_sprite(ecs_world,position,vel,bullet_surface)
     ecs_world.add_component(bullet_entity, CTagBullet())
     ServiceLocator.sounds_service.play(bullet_data["sound"])
+
+
+def create_text(world:esper.World, text:str, font:pygame.font.Font, color:pygame.Color, pos:pygame.Vector2):
+    text_entity = world.create_entity()
+    world.add_component(text_entity,
+                        CTransform(pos))
+    world.add_component(text_entity,
+                        CSurface.from_text(text, font, color))
+    return text_entity
+
+def create_press_start_game_text(ecs_world: esper.World, interface_data:dict) -> None:
+    title_text_data = interface_data["title_text"]
+    title_text_color = pygame.color.Color(title_text_data["color"]["r"],
+                                          title_text_data["color"]["g"],
+                                          title_text_data["color"]["b"])    
+    title_text_pos = pygame.Vector2(title_text_data["position"]["x"], title_text_data["position"]["y"])
+    title_text_font = ServiceLocator.fonts_service.get(title_text_data["font"], title_text_data["size"])
+
+    start_text = create_text(ecs_world, 
+                             title_text_data["text"], 
+                             title_text_font,
+                             title_text_color, 
+                             title_text_pos)
+    
+    blink_rate = title_text_data["blink_rate"]
+    ecs_world.add_component(start_text, CBlink(blink_rate))
+    ecs_world.add_component(start_text, CVelocity(pygame.Vector2(0,0)))
+    ecs_world.add_component(start_text, CVerticalCard(interface_data["game_logo"]["logo_speed"], 
+                                                      title_text_pos.y + interface_data["game_logo"]["logo_offset"], 
+                                                      title_text_pos.y))
