@@ -14,5 +14,14 @@
         "g": 144,
         "b": 255
     },
-    "high_score_max_value": 1000
+    "high_score_max_value": 1000,
+    "game_logo": {
+        "image": "./assets/img/invaders_logo_title.png",
+        "pos": {
+            "x": 128,
+            "y": 60
+        },
+        "logo_speed": -50,
+        "logo_offset": 240
+    }
 }
