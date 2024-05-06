@@ -125,7 +125,7 @@ def create_press_start_game_text(ecs_world: esper.World, interface_data:dict) ->
                                           title_text_data["color"]["g"],
                                           title_text_data["color"]["b"])    
     title_text_pos = pygame.Vector2(title_text_data["position"]["x"], title_text_data["position"]["y"])
-    title_text_font = ServiceLocator.fonts_service.get(title_text_data["font"], title_text_data["size"])
+    title_text_font = ServiceLocator.fonts_service.get(interface_data["font"], title_text_data["size"])
 
     start_text = create_text(ecs_world, 
                              title_text_data["text"], 
@@ -139,3 +139,16 @@ def create_press_start_game_text(ecs_world: esper.World, interface_data:dict) ->
     ecs_world.add_component(start_text, CVerticalCard(interface_data["game_logo"]["logo_speed"], 
                                                       title_text_pos.y + interface_data["game_logo"]["logo_offset"], 
                                                       title_text_pos.y))
+    
+
+def create_paused_text(ecs_world:esper.World, interface_data:dict):
+    pause_text_data = interface_data["pause_text"]
+    font = ServiceLocator.fonts_service.get(interface_data["font"], 
+                                            pause_text_data["size"])
+    color = pygame.Color(pause_text_data["color"]["r"],
+                         pause_text_data["color"]["g"],
+                         pause_text_data["color"]["b"])
+    position = pygame.Vector2(pause_text_data["position"]["x"], pause_text_data["position"]["y"])
+    text = pause_text_data["text"]
+    breakpoint
+    return create_text(ecs_world, text, font, color, position)

@@ -1,4 +1,5 @@
 {
+    "font": "./assets/fnt/PressStart2P.ttf",
     "title_text":{
         "color": {
             "r": 255,
@@ -13,8 +14,20 @@
         "position":{
             "x": 65,
             "y": 160
+        }
+    },
+    "pause_text": {
+        "text": "PAUSE",
+        "size": 8,
+        "color": {
+            "r": 255,
+            "g": 0,
+            "b": 0
         },
-        "font": "./assets/fnt/PressStart2P.ttf"
+        "position": {
+            "x": 100,
+            "y": 130
+        }
     },
     "normal_text_color": {
         "r": 255,

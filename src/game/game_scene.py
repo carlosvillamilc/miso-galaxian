@@ -9,8 +9,10 @@ from src.ecs.systems.s_movement import system_movement
 from src.create.prefab_creator import (create_background, 
                                        create_player,
                                        create_input_player,
-                                       create_bullet)
+                                       create_bullet,
+                                       create_paused_text)
 class GameScene(Scene):
+
     def do_create(self):
         print("GameScene created")
         create_background(self.ecs_world, self._game_engine.starfield_cfg)
@@ -23,6 +25,8 @@ class GameScene(Scene):
         create_input_player(self.ecs_world)
 
     def do_update(self, delta_time):
+        if self._game_engine.game_paused: 
+            return
         #print("GameScene updated")
         system_movement(self.ecs_world, delta_time)
         system_background(self.ecs_world, self._game_engine.screen, self._game_engine.delta_time)
@@ -32,7 +36,7 @@ class GameScene(Scene):
 
     def do_action(self, action: CInputCommand):
         print("GameScene action", action.name)
-        #breakpoint()
+        #breakpoint()        
         if action.name == "PLAYER_LEFT":
             if action.phase == CommandPhase.START:
                 self.player_vel.vel.x -= self.player_tag.input_speed
@@ -44,8 +48,18 @@ class GameScene(Scene):
             else:
                 self.player_vel.vel.x -= self.player_tag.input_speed
         if action.name == "PLAYER_FIRE" and action.phase == CommandPhase.START:
+            if self._game_engine.game_paused: 
+                return
             #breakpoint()
             create_bullet(self.ecs_world,self.player_transform.pos, self.player_surface.area.size, self._game_engine.bullet_cfg)
+        if action.name == "PAUSE_GAME" and action.phase == CommandPhase.START:
+            self._game_engine.game_paused = not self._game_engine.game_paused
+            if self._game_engine.game_paused:
+                self.paused_text = create_paused_text(self.ecs_world, self._game_engine.interface_cfg)
+            else:
+                self.ecs_world.delete_entity(self.paused_text)
+            
+            
 
     def do_process_events(self, event: pygame.Event) -> None:
         #breakpoint()

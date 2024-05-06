@@ -21,6 +21,7 @@ from src.ecs.components.c_input_command import CInputCommand
 
 class GameEngine:
     def __init__(self) -> None:
+        self.game_paused = False
         self.starfield_cfg = None
         self._load_config_files()
 
