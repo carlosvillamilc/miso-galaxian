@@ -154,3 +154,17 @@ def create_paused_text(ecs_world:esper.World, interface_data:dict):
     pause_text = create_text(ecs_world, text, font, color, position)
     ecs_world.add_component(pause_text, CBlink(blink_rate))
     return pause_text 
+
+
+def create_game_start_text(ecs_world:esper.World, interface_data:dict) -> int:
+    game_start_text_data = interface_data["game_start_text"]
+    font = ServiceLocator.fonts_service.get(interface_data["font"], 
+                                            game_start_text_data["size"])
+    color = pygame.Color(game_start_text_data["color"]["r"],
+                         game_start_text_data["color"]["g"],
+                         game_start_text_data["color"]["b"])
+    position = pygame.Vector2(game_start_text_data["position"]["x"], game_start_text_data["position"]["y"])
+    text = game_start_text_data["text"]
+    game_start_text = create_text(ecs_world, text, font, color, position)
+
+    return game_start_text    

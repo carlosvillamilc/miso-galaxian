@@ -29,7 +29,19 @@
             "y": 130
         },
         "blink_rate": 0.5
-
+    },
+    "game_start_text": {
+        "text": "START",
+        "size": 8,
+        "color": {
+            "r": 255,
+            "g": 255,
+            "b": 255
+        },
+        "position": {
+            "x": 128,
+            "y": 144
+        }
     },
     "normal_text_color": {
         "r": 255,

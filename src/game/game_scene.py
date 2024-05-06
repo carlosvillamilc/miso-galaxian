@@ -14,7 +14,8 @@ from src.create.prefab_creator import (create_background,
                                        create_player,
                                        create_input_player,
                                        create_bullet,
-                                       create_paused_text)
+                                       create_paused_text,
+                                       create_game_start_text)
 
 class GameScene(Scene):
 
@@ -28,6 +29,7 @@ class GameScene(Scene):
          self.player_status,
          self.player_surface) = create_player(self.ecs_world, self._game_engine.player_cfg)
         create_input_player(self.ecs_world)
+        #create_game_start_text(self.ecs_world,self._game_engine.interface_cfg)
 
     def do_update(self, delta_time):
         #if self._game_engine.game_paused: 
