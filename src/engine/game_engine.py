@@ -59,6 +59,8 @@ class GameEngine:
             self.player_cfg = json.load(player_file)
         with open(path + "/bullet.json", "r") as bullet_file:
             self.bullet_cfg = json.load(bullet_file)
+        with open(path + "/sounds.json", "r") as sounds_file:
+            self.sounds_cfg = json.load(sounds_file)
 
     async def run(self, start_scene_name: str) -> None:
         self._current_scene = self._scenes[start_scene_name]

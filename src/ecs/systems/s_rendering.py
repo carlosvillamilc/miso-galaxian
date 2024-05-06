@@ -8,4 +8,6 @@ def system_rendering(world: esper.World, screen: pygame.Surface):
     c_t: CTransform
     c_s: CSurface
     for entity, (c_t, c_s) in components:
+        if not c_s.visible:
+            continue
         screen.blit(c_s.surf, c_t.pos, c_s.area)

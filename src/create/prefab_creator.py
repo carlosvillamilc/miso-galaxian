@@ -148,7 +148,9 @@ def create_paused_text(ecs_world:esper.World, interface_data:dict):
     color = pygame.Color(pause_text_data["color"]["r"],
                          pause_text_data["color"]["g"],
                          pause_text_data["color"]["b"])
+    blink_rate = pause_text_data["blink_rate"]
     position = pygame.Vector2(pause_text_data["position"]["x"], pause_text_data["position"]["y"])
     text = pause_text_data["text"]
-    breakpoint
-    return create_text(ecs_world, text, font, color, position)
+    pause_text = create_text(ecs_world, text, font, color, position)
+    ecs_world.add_component(pause_text, CBlink(blink_rate))
+    return pause_text 

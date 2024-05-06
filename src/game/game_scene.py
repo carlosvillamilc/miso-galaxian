@@ -3,14 +3,19 @@ import pygame
 # Scene
 from src.ecs.components.c_input_command import CInputCommand, CommandPhase
 from src.engine.scenes.scene import Scene
+from src.engine.service_locator import ServiceLocator
+
 from src.ecs.systems.s_background import system_background
 from src.ecs.systems.s_player_movement import system_player_movement
 from src.ecs.systems.s_movement import system_movement
+from src.ecs.systems.s_blink import system_blink
+
 from src.create.prefab_creator import (create_background, 
                                        create_player,
                                        create_input_player,
                                        create_bullet,
                                        create_paused_text)
+
 class GameScene(Scene):
 
     def do_create(self):
@@ -25,12 +30,13 @@ class GameScene(Scene):
         create_input_player(self.ecs_world)
 
     def do_update(self, delta_time):
-        if self._game_engine.game_paused: 
-            return
+        #if self._game_engine.game_paused: 
+        #    return
         #print("GameScene updated")
-        system_movement(self.ecs_world, delta_time)
-        system_background(self.ecs_world, self._game_engine.screen, self._game_engine.delta_time)
-        system_player_movement(self.ecs_world, self._game_engine.screen)
+        system_movement(self.ecs_world, delta_time, self._game_engine.game_paused   )
+        system_background(self.ecs_world, self._game_engine.screen, self._game_engine.delta_time, self._game_engine.game_paused)
+        system_player_movement(self.ecs_world, self._game_engine.screen, self._game_engine.game_paused)
+        system_blink(self.ecs_world, delta_time)
 
 
 
@@ -56,6 +62,8 @@ class GameScene(Scene):
             self._game_engine.game_paused = not self._game_engine.game_paused
             if self._game_engine.game_paused:
                 self.paused_text = create_paused_text(self.ecs_world, self._game_engine.interface_cfg)
+                ServiceLocator.sounds_service.play(self._game_engine.sounds_cfg["pause_game"])
+
             else:
                 self.ecs_world.delete_entity(self.paused_text)
             
