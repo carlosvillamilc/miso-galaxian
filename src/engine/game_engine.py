@@ -21,6 +21,8 @@ from src.ecs.components.c_input_command import CInputCommand
 
 class GameEngine:
     def __init__(self) -> None:
+        self.game_paused = False
+        self.starfield_cfg = None
         self._load_config_files()
 
         pygame.init()
@@ -53,6 +55,12 @@ class GameEngine:
             self.interface_cfg = json.load(interface_file)
         with open(path + "/starfield.json", "r") as starfield_file:
             self.starfield_cfg = json.load(starfield_file)
+        with open(path + "/player.json", "r") as player_file:
+            self.player_cfg = json.load(player_file)
+        with open(path + "/bullet.json", "r") as bullet_file:
+            self.bullet_cfg = json.load(bullet_file)
+        with open(path + "/sounds.json", "r") as sounds_file:
+            self.sounds_cfg = json.load(sounds_file)
 
     async def run(self, start_scene_name: str) -> None:
         self._current_scene = self._scenes[start_scene_name]
@@ -71,7 +79,6 @@ class GameEngine:
         self._scene_name_to_switch = scene_name
 
     def _create(self):
-        create_background(self.ecs_world, self.starfield_cfg)
         self._current_scene.do_create()
 
     def _calculate_time(self):
@@ -86,7 +93,6 @@ class GameEngine:
 
     def _update(self):
         self._current_scene.simulate(self.delta_time)
-        system_background(self.ecs_world, self.screen, self.delta_time)
 
     def _draw(self):
         self.screen.fill(
