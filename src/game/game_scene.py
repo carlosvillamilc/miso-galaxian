@@ -9,6 +9,9 @@ from src.ecs.systems.s_background import system_background
 from src.ecs.systems.s_player_movement import system_player_movement
 from src.ecs.systems.s_movement import system_movement
 from src.ecs.systems.s_blink import system_blink
+from src.ecs.systems.s_screen_bullet import system_screen_bullet
+
+from src.ecs.components.tags.c_tag_bullet import CTagBullet
 
 from src.create.prefab_creator import (create_background, 
                                        create_player,
@@ -41,6 +44,9 @@ class GameScene(Scene):
         system_movement(self.ecs_world, delta_time)
         system_background(self.ecs_world, self._game_engine.screen, delta_time)
         system_player_movement(self.ecs_world, self._game_engine.screen)
+        system_screen_bullet(self.ecs_world, self._game_engine.screen)
+        self.bullets = len(self.ecs_world.get_component(CTagBullet))
+        print('bullets', self.bullets)
 
 
 
@@ -61,7 +67,8 @@ class GameScene(Scene):
             if ServiceLocator.globals_service.paused:
                 return
             #breakpoint()
-            create_bullet(self.ecs_world,self.player_transform.pos, self.player_surface.area.size)
+            if self.bullets < 1:
+                create_bullet(self.ecs_world,self.player_transform.pos, self.player_surface.area.size)
         if action.name == "PAUSE_GAME" and action.phase == CommandPhase.START:
             ServiceLocator.globals_service.paused = not ServiceLocator.globals_service.paused
             if ServiceLocator.globals_service.paused:
