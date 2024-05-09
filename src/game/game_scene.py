@@ -21,15 +21,15 @@ class GameScene(Scene):
 
     def do_create(self):
         print("GameScene created")
-        create_background(self.ecs_world, self._game_engine.starfield_cfg)
+        create_background(self.ecs_world)
         (self.player_entity, 
          self.player_transform, 
          self.player_vel, 
          self.player_tag, 
          self.player_status,
-         self.player_surface) = create_player(self.ecs_world, self._game_engine.player_cfg)
+         self.player_surface) = create_player(self.ecs_world)
         create_input_player(self.ecs_world)
-        #create_game_start_text(self.ecs_world,self._game_engine.interface_cfg)
+        #create_game_start_text(self.ecs_world)
 
     def do_update(self, delta_time):
         #if self._game_engine.game_paused: 
@@ -59,12 +59,13 @@ class GameScene(Scene):
             if self._game_engine.game_paused: 
                 return
             #breakpoint()
-            create_bullet(self.ecs_world,self.player_transform.pos, self.player_surface.area.size, self._game_engine.bullet_cfg)
+            create_bullet(self.ecs_world,self.player_transform.pos, self.player_surface.area.size)
         if action.name == "PAUSE_GAME" and action.phase == CommandPhase.START:
             self._game_engine.game_paused = not self._game_engine.game_paused
             if self._game_engine.game_paused:
-                self.paused_text = create_paused_text(self.ecs_world, self._game_engine.interface_cfg)
-                ServiceLocator.sounds_service.play(self._game_engine.sounds_cfg["pause_game"])
+                self.paused_text = create_paused_text(self.ecs_world)
+                sounds_data = ServiceLocator.configs_service.get("assets/cfg/sounds.json")
+                ServiceLocator.sounds_service.play(sounds_data["pause_game"])
 
             else:
                 self.ecs_world.delete_entity(self.paused_text)

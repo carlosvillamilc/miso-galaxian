@@ -16,7 +16,8 @@ from src.ecs.components.tags.c_tag_star import CTagStar
 from src.ecs.components.tags.c_tag_player import CTagPlayer
 from src.ecs.components.tags.c_tag_bullet import CTagBullet
 
-def create_background(ecs_world: esper.World, background_data: dict):
+def create_background(ecs_world: esper.World):
+    background_data = ServiceLocator.configs_service.get("assets/cfg/starfield.json")
     number_of_stars = background_data["number_of_stars"]
     speed_range = (background_data["vertical_speed"]["min"], background_data["vertical_speed"]["max"])
     blink_rate_range = (background_data["blink_rate"]["min"], background_data["blink_rate"]["max"])
@@ -51,7 +52,8 @@ def create_sprite(ecs_world: esper.World, pos: pygame.Vector2, vel: pygame.Vecto
                         CSurface.from_surface(surface))
     return sprite_entity
 
-def create_title_logo(ecs_world:esper.World, interface_data: dict):
+def create_title_logo(ecs_world:esper.World):
+    interface_data = ServiceLocator.configs_service.get("assets/cfg/interface.json")
     logo_data = interface_data["game_logo"]
     logo_surface = ServiceLocator.images_service.get(logo_data['image'])
 
@@ -64,7 +66,8 @@ def create_title_logo(ecs_world:esper.World, interface_data: dict):
     ecs_world.add_component(logo_entity, CVerticalCard(logo_data["logo_speed"], pos.y + logo_data["logo_offset"], pos.y))
 
 
-def create_player(ecs_world: esper.World, player_data: dict):
+def create_player(ecs_world: esper.World):
+    player_data = ServiceLocator.configs_service.get("assets/cfg/player.json")
     surface = ServiceLocator.images_service.get(player_data["image"])
     pos = pygame.Vector2(player_data["start_point"]["x"],  
                          player_data["start_point"]["y"])
@@ -94,8 +97,8 @@ def create_input_player(ecs_world: esper.World):
     ecs_world.add_component(pause_game, CInputCommand("PAUSE_GAME", pygame.K_p))
 
 
-def create_bullet(ecs_world: esper.World, player_position: pygame.Vector2, player_size: pygame.Vector2,bullet_data: dict):
-    
+def create_bullet(ecs_world: esper.World, player_position: pygame.Vector2, player_size: pygame.Vector2):
+    bullet_data = ServiceLocator.configs_service.get("assets/cfg/bullet.json")
     bullet_surface = ServiceLocator.images_service.get(bullet_data['image'])
     bullet_size = bullet_surface.get_rect().size
 
@@ -119,7 +122,8 @@ def create_text(world:esper.World, text:str, font:pygame.font.Font, color:pygame
                         CSurface.from_text(text, font, color))
     return text_entity
 
-def create_press_start_game_text(ecs_world: esper.World, interface_data:dict) -> None:
+def create_press_start_game_text(ecs_world: esper.World) -> None:
+    interface_data = ServiceLocator.configs_service.get("assets/cfg/interface.json")
     title_text_data = interface_data["title_text"]
     title_text_color = pygame.color.Color(title_text_data["color"]["r"],
                                           title_text_data["color"]["g"],
@@ -141,7 +145,8 @@ def create_press_start_game_text(ecs_world: esper.World, interface_data:dict) ->
                                                       title_text_pos.y))
     
 
-def create_paused_text(ecs_world:esper.World, interface_data:dict):
+def create_paused_text(ecs_world:esper.World):
+    interface_data = ServiceLocator.configs_service.get("assets/cfg/interface.json")
     pause_text_data = interface_data["pause_text"]
     font = ServiceLocator.fonts_service.get(interface_data["font"], 
                                             pause_text_data["size"])
@@ -156,7 +161,8 @@ def create_paused_text(ecs_world:esper.World, interface_data:dict):
     return pause_text 
 
 
-def create_game_start_text(ecs_world:esper.World, interface_data:dict) -> int:
+def create_game_start_text(ecs_world:esper.World) -> int:
+    interface_data = ServiceLocator.configs_service.get("assets/cfg/interface.json")
     game_start_text_data = interface_data["game_start_text"]
     font = ServiceLocator.fonts_service.get(interface_data["font"], 
                                             game_start_text_data["size"])
