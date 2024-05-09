@@ -52,6 +52,17 @@ def create_sprite(ecs_world: esper.World, pos: pygame.Vector2, vel: pygame.Vecto
                         CSurface.from_surface(surface))
     return sprite_entity
 
+def create_square(ecs_world: esper.World, size: pygame.Vector2,
+                  pos: pygame.Vector2, vel: pygame.Vector2, col: pygame.Color) -> int:
+    square_entity = ecs_world.create_entity()
+    ecs_world.add_component(square_entity,
+                        CSurface(size, col))
+    ecs_world.add_component(square_entity,
+                        CTransform(pos))
+    ecs_world.add_component(square_entity,
+                        CVelocity(vel))
+    return square_entity
+
 def create_title_logo(ecs_world:esper.World):
     interface_data = ServiceLocator.configs_service.get("assets/cfg/interface.json")
     logo_data = interface_data["game_logo"]
@@ -99,17 +110,22 @@ def create_input_player(ecs_world: esper.World):
 
 def create_bullet(ecs_world: esper.World, player_position: pygame.Vector2, player_size: pygame.Vector2):
     bullet_data = ServiceLocator.configs_service.get("assets/cfg/bullet.json")
-    bullet_surface = ServiceLocator.images_service.get(bullet_data['image'])
-    bullet_size = bullet_surface.get_rect().size
-
+    bullet_size = pygame.Vector2(bullet_data["size"]["w"], 
+                          bullet_data["size"]["h"])
     position = pygame.Vector2(player_position.x + (player_size[0]/2) - (bullet_size[0]/2) , 
                               player_position.y + (player_size[1]/2) - (bullet_size[1]/2))
     
 
     vel = pygame.Vector2(bullet_data["velocity"]["x"],
                            bullet_data["velocity"]["y"])
+    size = pygame.Vector2(bullet_data["size"]["w"], 
+                          bullet_data["size"]["h"])
+    color = pygame.Color(bullet_data["color"]["r"],
+                         bullet_data["color"]["g"],
+                         bullet_data["color"]["b"])
     
-    bullet_entity = create_sprite(ecs_world,position,vel,bullet_surface)
+    bullet_entity = create_square(ecs_world, size, position, vel, color)
+    
     ecs_world.add_component(bullet_entity, CTagBullet())
     ServiceLocator.sounds_service.play(bullet_data["sound"])
 

@@ -5,7 +5,15 @@
         "x": 0,
         "y": -425
     },
-
+    "size": {
+        "w": 1,
+        "h": 3
+    },   
+    "color": {
+        "r": 255,
+        "g": 158,
+        "b": 57
+    },
     "image_special": "assets/img/bullet_special.png",
     "sound_special": "assets/snd/laser_special.ogg",
     "velocity_special": 100,
