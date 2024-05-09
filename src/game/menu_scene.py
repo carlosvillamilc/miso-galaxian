@@ -25,10 +25,12 @@ class MenuScene(Scene):
 
     def do_update(self, delta_time):
         #print("MenuScene updated")
-        system_background(self.ecs_world, self._game_engine.screen, self._game_engine.delta_time, self._game_engine.game_paused)
-        system_movement(self.ecs_world, delta_time, self._game_engine.game_paused)
-        system_vertical_logo_movement(self.ecs_world)
         system_blink(self.ecs_world, delta_time)
+        if ServiceLocator.globals_service.paused:
+            return
+        system_background(self.ecs_world, self._game_engine.screen, self._game_engine.delta_time)
+        system_movement(self.ecs_world, delta_time)
+        system_vertical_logo_movement(self.ecs_world)
 
     def do_action(self, action: CInputCommand):
         print("MenuScene action")

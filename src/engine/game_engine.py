@@ -21,8 +21,8 @@ from src.ecs.components.c_input_command import CInputCommand
 
 class GameEngine:
     def __init__(self) -> None:
-        self.game_paused = False
-        
+        #self.game_paused = False
+
         pygame.init()
         
         with open("assets/cfg/window.json", encoding="utf-8") as window_file:

@@ -32,13 +32,15 @@ class GameScene(Scene):
         #create_game_start_text(self.ecs_world)
 
     def do_update(self, delta_time):
+        system_blink(self.ecs_world, delta_time)
+        if ServiceLocator.globals_service.paused:
+            return
         #if self._game_engine.game_paused: 
         #    return
         #print("GameScene updated")
-        system_movement(self.ecs_world, delta_time, self._game_engine.game_paused   )
-        system_background(self.ecs_world, self._game_engine.screen, self._game_engine.delta_time, self._game_engine.game_paused)
-        system_player_movement(self.ecs_world, self._game_engine.screen, self._game_engine.game_paused)
-        system_blink(self.ecs_world, delta_time)
+        system_movement(self.ecs_world, delta_time)
+        system_background(self.ecs_world, self._game_engine.screen, delta_time)
+        system_player_movement(self.ecs_world, self._game_engine.screen)
 
 
 
@@ -56,13 +58,13 @@ class GameScene(Scene):
             else:
                 self.player_vel.vel.x -= self.player_tag.input_speed
         if action.name == "PLAYER_FIRE" and action.phase == CommandPhase.START:
-            if self._game_engine.game_paused: 
+            if ServiceLocator.globals_service.paused:
                 return
             #breakpoint()
             create_bullet(self.ecs_world,self.player_transform.pos, self.player_surface.area.size)
         if action.name == "PAUSE_GAME" and action.phase == CommandPhase.START:
-            self._game_engine.game_paused = not self._game_engine.game_paused
-            if self._game_engine.game_paused:
+            ServiceLocator.globals_service.paused = not ServiceLocator.globals_service.paused
+            if ServiceLocator.globals_service.paused:
                 self.paused_text = create_paused_text(self.ecs_world)
                 sounds_data = ServiceLocator.configs_service.get("assets/cfg/sounds.json")
                 ServiceLocator.sounds_service.play(sounds_data["pause_game"])

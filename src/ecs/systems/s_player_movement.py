@@ -6,9 +6,7 @@ from src.ecs.components.c_transform import CTransform
 from src.ecs.components.c_velocity import CVelocity
 from src.ecs.components.tags.c_tag_player import CTagPlayer
 
-def system_player_movement(world: esper.World, screen: pygame.Surface, paused: bool):
-    if paused:
-        return
+def system_player_movement(world: esper.World, screen: pygame.Surface):
     screen_rect = screen.get_rect()
     components = world.get_components(CTransform, CSurface, CTagPlayer)
     for _, (c_t, c_s, _) in components:

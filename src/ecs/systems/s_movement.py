@@ -4,9 +4,7 @@ from src.ecs.components.c_transform import CTransform
 from src.ecs.components.c_velocity import CVelocity
 from src.ecs.components.tags.c_tag_star import CTagStar
 
-def system_movement(ecs_world:esper.World, delta_time:float, paused: bool ):
-    if paused:
-        return
+def system_movement(ecs_world:esper.World, delta_time:float):
     components = ecs_world.get_components(CTransform, CVelocity)
     for ent, (c_t, c_v) in components:
         if ecs_world.has_component(ent, CTagStar):
