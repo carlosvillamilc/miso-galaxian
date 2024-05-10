@@ -11,10 +11,13 @@ from src.ecs.components.c_blink import CBlink
 from src.ecs.components.c_vertical_card import CVerticalCard
 from src.ecs.components.c_player_status import CPlayerStatus
 from src.ecs.components.c_input_command import CInputCommand
+from src.ecs.components.c_animation import CAnimation
 
 from src.ecs.components.tags.c_tag_star import CTagStar
 from src.ecs.components.tags.c_tag_player import CTagPlayer
 from src.ecs.components.tags.c_tag_bullet import CTagBullet
+from src.ecs.components.tags.c_tag_explosion import CTagExplosion
+from src.ecs.components.tags.c_tag_enemy import CTagEnemy
 
 def create_background(ecs_world: esper.World):
     background_data = ServiceLocator.configs_service.get("assets/cfg/starfield.json")
@@ -108,7 +111,7 @@ def create_input_player(ecs_world: esper.World):
     ecs_world.add_component(pause_game, CInputCommand("PAUSE_GAME", pygame.K_p))
 
 
-def create_bullet(ecs_world: esper.World, player_position: pygame.Vector2, player_size: pygame.Vector2):
+def create_player_bullet(ecs_world: esper.World, player_position: pygame.Vector2, player_size: pygame.Vector2):
     bullet_data = ServiceLocator.configs_service.get("assets/cfg/bullet.json")
     bullet_size = pygame.Vector2(bullet_data["size"]["w"], 
                           bullet_data["size"]["h"])
@@ -126,7 +129,7 @@ def create_bullet(ecs_world: esper.World, player_position: pygame.Vector2, playe
     
     bullet_entity = create_square(ecs_world, size, position, vel, color)
     
-    ecs_world.add_component(bullet_entity, CTagBullet())
+    ecs_world.add_component(bullet_entity, CTagBullet('player'))
     ServiceLocator.sounds_service.play(bullet_data["sound"])
 
 
@@ -190,3 +193,97 @@ def create_game_start_text(ecs_world:esper.World) -> int:
     game_start_text = create_text(ecs_world, text, font, color, position)
 
     return game_start_text    
+
+def create_explosion(ecs_world: esper.World, pos: pygame.Vector2, type:str):
+    explosion_data = ServiceLocator.configs_service.get("assets/cfg/explosions.json")
+    explosion_data = explosion_data[type]
+    explosion_surface = ServiceLocator.images_service.get(explosion_data['image'])
+
+    vel = pygame.Vector2(0, 0)
+
+    explosion_entity = create_sprite(ecs_world, pos, vel, explosion_surface)
+    ecs_world.add_component(explosion_entity, CTagExplosion())
+    ecs_world.add_component(explosion_entity, CAnimation(explosion_data["animations"]))
+    ServiceLocator.sounds_service.play(explosion_data["sound"])
+    return explosion_entity
+
+def create_enemy(ecs_world: esper.World,
+                 pos: pygame.Vector2,
+                 velocity: pygame.Vector2,
+                 score_value:float,
+                 score_value_attack: float,
+                 image_path: str,
+                 animations:dict) -> None:
+    image = ServiceLocator.images_service.get(image_path)
+    enemy_entity = create_sprite(ecs_world, pos, velocity, image)
+    ecs_world.add_component(enemy_entity, CTagEnemy(score_value, score_value_attack))
+    ecs_world.add_component(enemy_entity, CAnimation(animations))
+
+
+def create_all_enemies(ecs_world: esper.World):
+    enemies_data = ServiceLocator.configs_service.get("assets/cfg/enemies.json")
+    sep_y = 13  
+    
+    enemy_a_config = enemies_data["enemy_04"]
+    enemy_b_config = enemies_data["enemy_03"]
+    enemy_c_config = enemies_data["enemy_02"]
+    enemy_d_config = enemies_data["enemy_01"]
+    global_speed = pygame.Vector2(0, 0)
+
+    start_pos: pygame.Vector2 = pygame.Vector2(94, 39)
+    score_value = enemy_a_config["score_value"]
+    score_value_attack = enemy_a_config["score_value_attack"]
+    image = enemy_a_config["image"]
+    animations = enemy_a_config["animations"]
+    for x in range(2):
+        for y in range(1):
+            pos = pygame.Vector2(start_pos.x + 53 * x, start_pos.y + sep_y * y)
+            create_enemy(ecs_world, pos, global_speed, score_value, score_value_attack, image, animations)
+
+    start_pos.x = 77
+    start_pos.y = 54
+    score_value = enemy_b_config["score_value"]
+    score_value_attack = enemy_b_config["score_value_attack"]
+    image = enemy_b_config["image"]
+    animations = enemy_b_config["animations"]
+    for x in range(6):
+        for y in range(1):
+            pos = pygame.Vector2(start_pos.x + 18 * x, start_pos.y + sep_y * y)
+            create_enemy(ecs_world, pos, global_speed, score_value, score_value_attack, image, animations)
+
+    start_pos.x = 58
+    start_pos.y = 66
+    score_value = enemy_c_config["score_value"]
+    score_value_attack = enemy_c_config["score_value_attack"]
+    image = enemy_c_config["image"]
+    animations = enemy_c_config["animations"]
+    for x in range(8):
+        for y in range(1):
+            pos = pygame.Vector2(start_pos.x + 18 * x, start_pos.y + sep_y * y)
+            create_enemy(ecs_world, pos, global_speed, score_value, score_value_attack, image, animations)
+
+    start_pos.x = 42
+    start_pos.y = 80
+    score_value = enemy_d_config["score_value"]
+    score_value_attack = enemy_d_config["score_value_attack"]
+    image = enemy_d_config["image"]
+    animations = enemy_d_config["animations"]
+    for x in range(10):
+        for y in range(3):
+            pos = pygame.Vector2(start_pos.x + 18 * x, start_pos.y + sep_y * y)
+            create_enemy(ecs_world, pos, global_speed, score_value, score_value_attack, image, animations)
+
+
+def create_enemy_bullet(ecs_world:esper.World, pos:pygame.Vector2, vel_x:float):
+    bullet_cfg = ServiceLocator.configs_service.get("assets/cfg/bullets.json")
+    enemy_bullet_cfg = bullet_cfg["enemy"]
+    size = pygame.Vector2(enemy_bullet_cfg["size"]["w"], 
+                          enemy_bullet_cfg["size"]["h"])
+    vel = pygame.Vector2(enemy_bullet_cfg["velocity"]["x"], enemy_bullet_cfg["velocity"]["y"])
+    color = pygame.Color(enemy_bullet_cfg["color"]["r"], 
+                           enemy_bullet_cfg["color"]["g"],
+                           enemy_bullet_cfg["color"]["b"])
+    enemy_bullet_entity = create_square(ecs_world, size, pos, vel, color)
+        
+    ecs_world.add_component(enemy_bullet_entity,
+                        CTagBullet("enemy"))

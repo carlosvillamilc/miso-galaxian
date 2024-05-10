@@ -1,3 +1,3 @@
 class CTagBullet:
-    def __init__(self) -> None:
-        pass
+    def __init__(self, type:str) -> None:
+        self.type = type

@@ -10,15 +10,19 @@ from src.ecs.systems.s_player_movement import system_player_movement
 from src.ecs.systems.s_movement import system_movement
 from src.ecs.systems.s_blink import system_blink
 from src.ecs.systems.s_screen_bullet import system_screen_bullet
-
+from src.ecs.systems.s_animation import system_animation
+from src.ecs.systems.s_collision_bullet_enemy import system_collision_bullet_enemy
+from src.ecs.systems.s_collision_bullet_player import system_collision_bullet_player
+from src.ecs.systems.s_explosion import system_explosion
 from src.ecs.components.tags.c_tag_bullet import CTagBullet
 
 from src.create.prefab_creator import (create_background, 
                                        create_player,
                                        create_input_player,
-                                       create_bullet,
+                                       create_player_bullet,
                                        create_paused_text,
-                                       create_game_start_text)
+                                       create_game_start_text,
+                                       create_all_enemies)
 
 class GameScene(Scene):
 
@@ -32,7 +36,8 @@ class GameScene(Scene):
          self.player_status,
          self.player_surface) = create_player(self.ecs_world)
         create_input_player(self.ecs_world)
-        #create_game_start_text(self.ecs_world)
+        #create_game_start_text(self.ecs_world,self._game_engine.interface_cfg)
+        create_all_enemies(self.ecs_world)
 
     def do_update(self, delta_time):
         system_blink(self.ecs_world, delta_time)
@@ -46,8 +51,10 @@ class GameScene(Scene):
         system_player_movement(self.ecs_world, self._game_engine.screen)
         system_screen_bullet(self.ecs_world, self._game_engine.screen)
         self.bullets = len(self.ecs_world.get_component(CTagBullet))
-        print('bullets', self.bullets)
-
+        system_animation(self.ecs_world, delta_time)
+        system_collision_bullet_enemy(self.ecs_world)
+        system_collision_bullet_player(self.ecs_world)
+        system_explosion(self.ecs_world)
 
 
     def do_action(self, action: CInputCommand):
@@ -68,7 +75,7 @@ class GameScene(Scene):
                 return
             #breakpoint()
             if self.bullets < 1:
-                create_bullet(self.ecs_world,self.player_transform.pos, self.player_surface.area.size)
+                create_player_bullet(self.ecs_world,self.player_transform.pos, self.player_surface.area.size)
         if action.name == "PAUSE_GAME" and action.phase == CommandPhase.START:
             ServiceLocator.globals_service.paused = not ServiceLocator.globals_service.paused
             if ServiceLocator.globals_service.paused:
