@@ -2,10 +2,6 @@ import pygame
 import esper
 
 from src.create.prefab_creator import create_explosion
-# from src.ecs.components.c_bullet_state import BulletStates, CBulletState
-# from src.ecs.components.c_enemy_state import CEnemyState, EnemyStates
-# from src.ecs.components.c_play_level_manager import CPlayLevelManager
-# from src.ecs.components.c_player_state import CPlayerState, PlayerStates
 from src.ecs.components.c_surface import CSurface
 from src.ecs.components.c_transform import CTransform
 from src.ecs.components.tags.c_tag_enemy import CTagEnemy
