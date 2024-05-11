@@ -18,6 +18,7 @@ from src.ecs.components.tags.c_tag_player import CTagPlayer
 from src.ecs.components.tags.c_tag_bullet import CTagBullet
 from src.ecs.components.tags.c_tag_explosion import CTagExplosion
 from src.ecs.components.tags.c_tag_enemy import CTagEnemy
+from src.ecs.components.tags.c_tag_score import CTagScore
 
 
 def create_background(ecs_world: esper.World):
@@ -409,7 +410,7 @@ def create_menu_text(ecs_world: esper.World):
         one_up_text_color,
         one_up_text_pos,
     )
-
+    ecs_world.add_component(one_up_text, CTagScore())
     ecs_world.add_component(one_up_text, CVelocity(pygame.Vector2(0, 0)))
     ecs_world.add_component(
         one_up_text,
