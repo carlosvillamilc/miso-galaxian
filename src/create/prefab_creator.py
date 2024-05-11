@@ -221,31 +221,53 @@ def create_enemy(ecs_world: esper.World,
 
 def create_all_enemies(ecs_world: esper.World):
     enemies_data = ServiceLocator.configs_service.get("assets/cfg/enemies.json")
-    sep_y = 13  
     
-    enemy_a_config = enemies_data["enemy_04"]
-    enemy_b_config = enemies_data["enemy_03"]
+    separate_y = 14  
+    separate_x = 18
+    
+    enemy_fourth_line_config = enemies_data["enemy_04"]
+    enemy_third_line_config = enemies_data["enemy_03"]
+    enemy_second_line_config = enemies_data["enemy_02"]
+    enemy_first_line_config = enemies_data["enemy_01"]
     speed = pygame.Vector2(0, 0)
 
-    start_pos: pygame.Vector2 = pygame.Vector2(94, 39)
-    score_value = enemy_a_config["score_value"]
-    image = enemy_a_config["image"]
-    animations = enemy_a_config["animations"]
-    for x in range(2):
-        for y in range(1):
-            pos = pygame.Vector2(start_pos.x + 53 * x, start_pos.y + sep_y * y)
+    start_pos: pygame.Vector2 = pygame.Vector2(42, 80)
+    score_value = enemy_first_line_config["score_value"]
+    image = enemy_first_line_config["image"]
+    animations = enemy_first_line_config["animations"]
+    for y in range(3):
+        for x in range(10):
+            pos = pygame.Vector2(start_pos.x + separate_x * x, start_pos.y + separate_y * y)
+            print(pos)
             create_enemy(ecs_world, pos, speed, score_value, image, animations)
 
-    start_pos.x = 77
-    start_pos.y = 54
-    score_value = enemy_b_config["score_value"]
-    image = enemy_b_config["image"]
-    animations = enemy_b_config["animations"]
+    start_pos.x = 58
+    start_pos.y -= separate_y
+    score_value = enemy_second_line_config["score_value"]
+    image = enemy_second_line_config["image"]
+    animations = enemy_second_line_config["animations"]
+    for x in range(8):
+        pos = pygame.Vector2(start_pos.x + separate_x * x, start_pos.y)
+        print(pos)
+        create_enemy(ecs_world, pos, speed, score_value, image, animations)
+
+    start_pos.x += separate_x
+    start_pos.y -= separate_y
+    score_value = enemy_third_line_config["score_value"]
+    image = enemy_third_line_config["image"]
+    animations = enemy_third_line_config["animations"]
     for x in range(6):
-        for y in range(1):
-            pos = pygame.Vector2(start_pos.x + 18 * x, start_pos.y + sep_y * y)
-            create_enemy(ecs_world, pos, speed, score_value, image, animations)
+        pos = pygame.Vector2(start_pos.x + separate_x * x, start_pos.y)
+        create_enemy(ecs_world, pos, speed, score_value, image, animations)
 
+    start_pos.x += separate_x - 1
+    start_pos.y -= separate_y + 1
+    score_value = enemy_fourth_line_config["score_value"]
+    image = enemy_fourth_line_config["image"]
+    animations = enemy_fourth_line_config["animations"]
+    for x in range(2):        
+        pos = pygame.Vector2(start_pos.x + separate_x * 3 * x, start_pos.y)
+        create_enemy(ecs_world, pos, speed, score_value, image, animations)
 
 
 def create_enemy_bullet(ecs_world:esper.World, pos:pygame.Vector2, vel_x:float):
