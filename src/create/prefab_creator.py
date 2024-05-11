@@ -283,3 +283,79 @@ def create_enemy_bullet(ecs_world:esper.World, pos:pygame.Vector2, vel_x:float):
         
     ecs_world.add_component(enemy_bullet_entity,
                         CTagBullet("enemy"))
+    
+
+def create_menu_text(ecs_world: esper.World):
+    interface_data = ServiceLocator.configs_service.get("assets/cfg/interface.json")
+    
+    #1UP Label
+    one_up_label_data = interface_data["1_up_label"]
+    one_up_label_color = pygame.color.Color(one_up_label_data["color"]["r"],
+                                          one_up_label_data["color"]["g"],
+                                          one_up_label_data["color"]["b"])    
+    one_up_label_pos = pygame.Vector2(one_up_label_data["position"]["x"], one_up_label_data["position"]["y"])
+    one_up_label_font = ServiceLocator.fonts_service.get(interface_data["font"], one_up_label_data["size"])
+
+    one_up_label = create_text(ecs_world, 
+                             one_up_label_data["text"], 
+                             one_up_label_font,
+                             one_up_label_color, 
+                             one_up_label_pos)
+    
+    ecs_world.add_component(one_up_label, CVelocity(pygame.Vector2(0,0)))
+    ecs_world.add_component(one_up_label, CVerticalCard(one_up_label_data["speed"], 
+                                                        one_up_label_pos.y + one_up_label_data["offset"], one_up_label_pos.y))
+    
+    #1UP Text
+    one_up_text_data = interface_data["1_up_text"]
+    one_up_text_color = pygame.color.Color(one_up_text_data["color"]["r"],
+                                          one_up_text_data["color"]["g"],
+                                          one_up_text_data["color"]["b"])    
+    one_up_text_pos = pygame.Vector2(one_up_text_data["position"]["x"], one_up_text_data["position"]["y"])
+    one_up_text_font = ServiceLocator.fonts_service.get(interface_data["font"], one_up_text_data["size"])
+
+    one_up_text = create_text(ecs_world, 
+                             one_up_text_data["text"], 
+                             one_up_text_font,
+                             one_up_text_color, 
+                             one_up_text_pos)
+    
+    ecs_world.add_component(one_up_text, CVelocity(pygame.Vector2(0,0)))
+    ecs_world.add_component(one_up_text, CVerticalCard(one_up_text_data["speed"], 
+                                                       one_up_text_pos.y + one_up_text_data["offset"], one_up_text_pos.y))
+  
+    #Hi-Score Label
+    hi_score_label_data = interface_data["hi_score_label"]
+    hi_score_label_color = pygame.color.Color(hi_score_label_data["color"]["r"],
+                                          hi_score_label_data["color"]["g"],
+                                          hi_score_label_data["color"]["b"])    
+    hi_score_label_pos = pygame.Vector2(hi_score_label_data["position"]["x"], hi_score_label_data["position"]["y"])
+    hi_score_label_font = ServiceLocator.fonts_service.get(interface_data["font"], hi_score_label_data["size"])
+
+    hi_score_label = create_text(ecs_world, 
+                             hi_score_label_data["text"], 
+                             hi_score_label_font,
+                             hi_score_label_color, 
+                             hi_score_label_pos)
+    
+    ecs_world.add_component(hi_score_label, CVelocity(pygame.Vector2(0,0)))
+    ecs_world.add_component(hi_score_label, CVerticalCard(hi_score_label_data["speed"], 
+                                                          hi_score_label_pos.y + hi_score_label_data["offset"], hi_score_label_pos.y))
+
+    #Hi-Score Text
+    hi_score_text_data = interface_data["hi_score_text"]
+    hi_score_text_color = pygame.color.Color(hi_score_text_data["color"]["r"],
+                                          hi_score_text_data["color"]["g"],
+                                          hi_score_text_data["color"]["b"])    
+    hi_score_text_pos = pygame.Vector2(hi_score_text_data["position"]["x"], hi_score_text_data["position"]["y"])
+    hi_score_text_font = ServiceLocator.fonts_service.get(interface_data["font"], hi_score_text_data["size"])
+
+    hi_score_text = create_text(ecs_world, 
+                             hi_score_text_data["text"], 
+                             hi_score_text_font,
+                             hi_score_text_color, 
+                             hi_score_text_pos)
+    
+    ecs_world.add_component(hi_score_text, CVelocity(pygame.Vector2(0,0)))
+    ecs_world.add_component(hi_score_text, CVerticalCard(hi_score_text_data["speed"], 
+                                                          hi_score_text_pos.y + hi_score_text_data["offset"], hi_score_text_pos.y))

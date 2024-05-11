@@ -43,6 +43,66 @@
             "y": 144
         }
     },
+    "1_up_label": {
+        "text": "1UP",
+        "size": 8,
+        "speed": -50,
+        "offset": 240,
+        "color": {
+            "r": 255,
+            "g": 0,
+            "b": 0
+        },
+        "position": {
+            "x": 30,
+            "y": 20
+        }
+    },
+    "1_up_text": {
+        "text": "00",
+        "size": 8,
+        "speed": -50,
+        "offset": 240,
+        "color": {
+            "r": 255,
+            "g": 255,
+            "b": 255
+        },
+        "position": {
+            "x": 55,
+            "y": 30
+        }
+    },
+    "hi_score_label": {
+        "text": "HI-SCORE",
+        "size": 8,
+        "speed": -50,
+        "offset": 240,
+        "color": {
+            "r": 255,
+            "g": 0,
+            "b": 0
+        },
+        "position": {
+            "x": 90,
+            "y": 20
+        }
+    },
+    "hi_score_text": {
+        "text": "5000",
+        "size": 8,
+        "speed": -50,
+        "offset": 240,
+        "color": {
+            "r": 30,
+            "g": 144,
+            "b": 255
+        },
+        "position": {
+            "x": 115,
+            "y": 30
+        }
+    },
     "normal_text_color": {
         "r": 255,
         "g": 255,

@@ -6,7 +6,8 @@ from src.engine.scenes.scene import Scene
 from src.engine.service_locator import ServiceLocator
 from src.create.prefab_creator import (create_title_logo, 
                                        create_background,
-                                       create_press_start_game_text)
+                                       create_press_start_game_text,
+                                       create_menu_text)
 
 from src.ecs.systems.s_background import system_background
 from src.ecs.systems.s_vertical_logo_movement import system_vertical_logo_movement
@@ -18,7 +19,7 @@ class MenuScene(Scene):
         create_background(self.ecs_world)
         create_title_logo(self.ecs_world)
         create_press_start_game_text(self.ecs_world)
-        
+        create_menu_text(self.ecs_world)
         start_game_action = self.ecs_world.create_entity()
         self.ecs_world.add_component(start_game_action, CInputCommand("START", pygame.K_z))
 
