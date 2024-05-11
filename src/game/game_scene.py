@@ -22,7 +22,8 @@ from src.create.prefab_creator import (create_background,
                                        create_player_bullet,
                                        create_paused_text,
                                        create_game_start_text,
-                                       create_all_enemies)
+                                       create_all_enemies,
+                                       create_menu_text)
 
 class GameScene(Scene):
 
@@ -38,6 +39,7 @@ class GameScene(Scene):
         create_input_player(self.ecs_world)
         #create_game_start_text(self.ecs_world,self._game_engine.interface_cfg)
         create_all_enemies(self.ecs_world)
+        create_menu_text(self.ecs_world)
 
     def do_update(self, delta_time):
         system_blink(self.ecs_world, delta_time)
