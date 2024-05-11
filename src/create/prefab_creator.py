@@ -18,7 +18,7 @@ from src.ecs.components.tags.c_tag_player import CTagPlayer
 from src.ecs.components.tags.c_tag_bullet import CTagBullet
 from src.ecs.components.tags.c_tag_explosion import CTagExplosion
 from src.ecs.components.tags.c_tag_enemy import CTagEnemy
-
+from src.ecs.components.tags.c_tag_score import CTagScore
 
 def create_background(ecs_world: esper.World):
     background_data = ServiceLocator.configs_service.get("assets/cfg/starfield.json")
@@ -283,7 +283,7 @@ def create_enemy(
     ecs_world.add_component(enemy_entity, CAnimation(animations))
 
 
-def create_all_enemies(ecs_world: esper.World):
+def create_enemies(ecs_world: esper.World):
     enemies_data = ServiceLocator.configs_service.get("assets/cfg/enemies.json")
 
     separate_y = 14
@@ -295,7 +295,7 @@ def create_all_enemies(ecs_world: esper.World):
     enemy_first_line_config = enemies_data["enemy_01"]
     speed = pygame.Vector2(0, 0)
 
-    start_pos: pygame.Vector2 = pygame.Vector2(42, 80)
+    start_pos: pygame.Vector2 = pygame.Vector2(42, 85)
     score_value = enemy_first_line_config["score_value"]
     image = enemy_first_line_config["image"]
     animations = enemy_first_line_config["animations"]
@@ -483,3 +483,4 @@ def create_menu_text(ecs_world: esper.World):
             hi_score_text_pos.y,
         ),
     )
+    ecs_world.add_component(hi_score_text, CTagScore(hi_score_text_data["text"]))
