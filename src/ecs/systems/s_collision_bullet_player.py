@@ -6,17 +6,18 @@ from src.ecs.components.c_surface import CSurface
 from src.ecs.components.c_transform import CTransform
 from src.ecs.components.tags.c_tag_enemy import CTagEnemy
 from src.ecs.components.tags.c_tag_bullet import CTagBullet
+from src.ecs.components.tags.c_tag_player import CTagPlayer
 from src.engine.service_locator import ServiceLocator
 
 def system_collision_bullet_player(ecs_world:esper.World):
     bullet_component = ecs_world.get_components(CTagBullet, CSurface, CTransform)
-    player_component = ecs_world.get_components(CSurface, CTransform)
+    player_component = ecs_world.get_components(CSurface, CTransform, CTagPlayer)
 
     for bullet_entity, (c_bullet_tag, c_bullet_surface, c_bullet_transform) in bullet_component:
         bullet_rect = c_bullet_surface.area.copy()
         bullet_rect.topleft = c_bullet_transform.pos.copy()
 
-        for player_entity, (c_player_surface, c_player_transform) in player_component:
+        for _, (c_player_surface, c_player_transform, _) in player_component:
             player_rect = c_player_surface.area.copy()
             player_rect.topleft = c_player_transform.pos.copy()
             if bullet_rect.colliderect(player_rect) and c_bullet_tag.type == "enemy":
