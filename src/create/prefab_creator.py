@@ -2,6 +2,8 @@ import pygame
 import esper
 import random
 
+from src.ecs.components.tags.c_tag_bullet_enemy import CTagBulletEnemy
+from src.ecs.components.tags.c_tag_bullet_player import CTagBulletPlayer
 from src.engine.service_locator import ServiceLocator
 
 from src.ecs.components.c_surface import CSurface
@@ -15,7 +17,6 @@ from src.ecs.components.c_animation import CAnimation
 
 from src.ecs.components.tags.c_tag_star import CTagStar
 from src.ecs.components.tags.c_tag_player import CTagPlayer
-from src.ecs.components.tags.c_tag_bullet import CTagBullet
 from src.ecs.components.tags.c_tag_explosion import CTagExplosion
 from src.ecs.components.tags.c_tag_enemy import CTagEnemy
 from src.ecs.components.tags.c_tag_score import CTagScore
@@ -157,7 +158,7 @@ def create_player_bullet(
 
     bullet_entity = create_square(ecs_world, size, position, vel, color)
 
-    ecs_world.add_component(bullet_entity, CTagBullet("player"))
+    ecs_world.add_component(bullet_entity, CTagBulletPlayer())
     ServiceLocator.sounds_service.play(bullet_data["player"]["sound"])
 
 def create_enemy_bullet(ecs_world: esper.World, enemy_position: pygame.Vector2, enemy_size: pygame.Vector2):
@@ -171,7 +172,7 @@ def create_enemy_bullet(ecs_world: esper.World, enemy_position: pygame.Vector2, 
 
     bullet_entity = create_square(ecs_world, size, position, vel, color)
 
-    ecs_world.add_component(bullet_entity, CTagBullet("enemy"))
+    ecs_world.add_component(bullet_entity, CTagBulletEnemy())
 
 def create_text(
     world: esper.World,
