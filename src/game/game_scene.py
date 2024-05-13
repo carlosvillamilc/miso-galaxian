@@ -2,6 +2,8 @@ import pygame
 
 # Scene
 from src.ecs.components.c_input_command import CInputCommand, CommandPhase
+from src.ecs.systems.s_enemy_movement import system_enemy_movement
+from src.ecs.systems.s_fire_enemy import system_fire_enemy
 from src.engine.scenes.scene import Scene
 from src.engine.service_locator import ServiceLocator
 
@@ -55,6 +57,8 @@ class GameScene(Scene):
         #    return
         # print("GameScene updated")
         system_movement(self.ecs_world, delta_time)
+        system_enemy_movement(self.ecs_world)
+        system_fire_enemy(self.ecs_world)
         system_background(self.ecs_world, self._game_engine.screen, delta_time)
         system_player_movement(self.ecs_world, self._game_engine.screen)
         system_screen_bullet(self.ecs_world, self._game_engine.screen)

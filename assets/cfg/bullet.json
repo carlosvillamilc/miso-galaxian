@@ -1,21 +1,34 @@
 {
-    "sound": "assets/snd/player_shoot.ogg",
-    "image": "assets/img/bullet.png",
-    "velocity": {
-        "x": 0,
-        "y": -425
+    "player": {
+        "sound": "assets/snd/player_shoot.ogg",
+        "velocity": {
+            "x": 0,
+            "y": -425
+        },
+        "size": {
+            "w": 1,
+            "h": 3
+        },   
+        "color": {
+            "r": 255,
+            "g": 158,
+            "b": 57
+        }
     },
-    "size": {
-        "w": 1,
-        "h": 3
-    },   
-    "color": {
-        "r": 255,
-        "g": 158,
-        "b": 57
-    },
-    "image_special": "assets/img/bullet_special.png",
-    "sound_special": "assets/snd/laser_special.ogg",
-    "velocity_special": 100,
-    "charge_time_special": 5
+    "enemy": {
+        "velocity": {
+            "x": 0,
+            "y": 175
+        },
+        "size": {
+            "w": 1,
+            "h": 3
+        },   
+        "color": {
+            "r": 255,
+            "g": 255,
+            "b": 255
+        }
+    }
+    
 }

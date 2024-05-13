@@ -143,23 +143,35 @@ def create_player_bullet(
     ecs_world: esper.World, player_position: pygame.Vector2, player_size: pygame.Vector2
 ):
     bullet_data = ServiceLocator.configs_service.get("assets/cfg/bullet.json")
-    bullet_size = pygame.Vector2(bullet_data["size"]["w"], bullet_data["size"]["h"])
+    bullet_size = pygame.Vector2(bullet_data["player"]["size"]["w"], bullet_data["player"]["size"]["h"])
     position = pygame.Vector2(
         player_position.x + (player_size[0] / 2) - (bullet_size[0] / 2),
         player_position.y + (player_size[1] / 2) - (bullet_size[1] / 2),
     )
 
-    vel = pygame.Vector2(bullet_data["velocity"]["x"], bullet_data["velocity"]["y"])
-    size = pygame.Vector2(bullet_data["size"]["w"], bullet_data["size"]["h"])
+    vel = pygame.Vector2(bullet_data["player"]["velocity"]["x"], bullet_data["player"]["velocity"]["y"])
+    size = pygame.Vector2(bullet_data["player"]["size"]["w"], bullet_data["player"]["size"]["h"])
     color = pygame.Color(
-        bullet_data["color"]["r"], bullet_data["color"]["g"], bullet_data["color"]["b"]
+        bullet_data["player"]["color"]["r"], bullet_data["player"]["color"]["g"], bullet_data["player"]["color"]["b"]
     )
 
     bullet_entity = create_square(ecs_world, size, position, vel, color)
 
     ecs_world.add_component(bullet_entity, CTagBullet("player"))
-    ServiceLocator.sounds_service.play(bullet_data["sound"])
+    ServiceLocator.sounds_service.play(bullet_data["player"]["sound"])
 
+def create_enemy_bullet(ecs_world: esper.World, enemy_position: pygame.Vector2, enemy_size: pygame.Vector2):
+    bullet_data = ServiceLocator.configs_service.get("assets/cfg/bullet.json")
+    bullet_size = pygame.Vector2(bullet_data["enemy"]["size"]["w"], bullet_data["enemy"]["size"]["h"])
+    position = pygame.Vector2(enemy_position.x + (enemy_size[0] / 2) - (bullet_size[0] / 2), enemy_position.y + (enemy_size[1] / 2) - (bullet_size[1] / 2))
+
+    vel = pygame.Vector2(bullet_data["enemy"]["velocity"]["x"], bullet_data["enemy"]["velocity"]["y"])
+    size = pygame.Vector2(bullet_data["enemy"]["size"]["w"], bullet_data["enemy"]["size"]["h"])
+    color = pygame.Color(bullet_data["enemy"]["color"]["r"], bullet_data["enemy"]["color"]["g"], bullet_data["enemy"]["color"]["b"])
+
+    bullet_entity = create_square(ecs_world, size, position, vel, color)
+
+    ecs_world.add_component(bullet_entity, CTagBullet("enemy"))
 
 def create_text(
     world: esper.World,
@@ -285,74 +297,26 @@ def create_enemy(
 
 
 def create_all_enemies(ecs_world: esper.World):
+    enemies_level = ServiceLocator.configs_service.get("assets/cfg/level_01.json")
+    enemies_info = enemies_level["enemies_info"]
     enemies_data = ServiceLocator.configs_service.get("assets/cfg/enemies.json")
 
-    separate_y = 14
-    separate_x = 18
+    for enemy_info in enemies_info:
+        enemy_config = None
+        if enemy_info["enemy_type"] == "Type1":
+            enemy_config = enemies_data["enemy_01"]
+        elif enemy_info["enemy_type"] == "Type2":
+            enemy_config = enemies_data["enemy_02"]
+        elif enemy_info["enemy_type"] == "Type3":
+            enemy_config = enemies_data["enemy_03"]
+        elif enemy_info["enemy_type"] == "Type4":
+            enemy_config = enemies_data["enemy_04"]
 
-    enemy_fourth_line_config = enemies_data["enemy_04"]
-    enemy_third_line_config = enemies_data["enemy_03"]
-    enemy_second_line_config = enemies_data["enemy_02"]
-    enemy_first_line_config = enemies_data["enemy_01"]
-    speed = pygame.Vector2(0, 0)
-
-    start_pos: pygame.Vector2 = pygame.Vector2(42, 85)
-    score_value = enemy_first_line_config["score_value"]
-    image = enemy_first_line_config["image"]
-    animations = enemy_first_line_config["animations"]
-    for y in range(3):
-        for x in range(10):
-            pos = pygame.Vector2(
-                start_pos.x + separate_x * x, start_pos.y + separate_y * y
-            )
-            print(pos)
-            create_enemy(ecs_world, pos, speed, score_value, image, animations)
-
-    start_pos.x = 58
-    start_pos.y -= separate_y
-    score_value = enemy_second_line_config["score_value"]
-    image = enemy_second_line_config["image"]
-    animations = enemy_second_line_config["animations"]
-    for x in range(8):
-        pos = pygame.Vector2(start_pos.x + separate_x * x, start_pos.y)
-        print(pos)
-        create_enemy(ecs_world, pos, speed, score_value, image, animations)
-
-    start_pos.x += separate_x
-    start_pos.y -= separate_y
-    score_value = enemy_third_line_config["score_value"]
-    image = enemy_third_line_config["image"]
-    animations = enemy_third_line_config["animations"]
-    for x in range(6):
-        pos = pygame.Vector2(start_pos.x + separate_x * x, start_pos.y)
-        create_enemy(ecs_world, pos, speed, score_value, image, animations)
-
-    start_pos.x += separate_x - 1
-    start_pos.y -= separate_y + 1
-    score_value = enemy_fourth_line_config["score_value"]
-    image = enemy_fourth_line_config["image"]
-    animations = enemy_fourth_line_config["animations"]
-    for x in range(2):
-        pos = pygame.Vector2(start_pos.x + separate_x * 3 * x, start_pos.y)
-        create_enemy(ecs_world, pos, speed, score_value, image, animations)
-
-
-def create_enemy_bullet(ecs_world: esper.World, pos: pygame.Vector2, vel_x: float):
-    bullet_cfg = ServiceLocator.configs_service.get("assets/cfg/bullets.json")
-    enemy_bullet_cfg = bullet_cfg["enemy"]
-    size = pygame.Vector2(enemy_bullet_cfg["size"]["w"], enemy_bullet_cfg["size"]["h"])
-    vel = pygame.Vector2(
-        enemy_bullet_cfg["velocity"]["x"], enemy_bullet_cfg["velocity"]["y"]
-    )
-    color = pygame.Color(
-        enemy_bullet_cfg["color"]["r"],
-        enemy_bullet_cfg["color"]["g"],
-        enemy_bullet_cfg["color"]["b"],
-    )
-    enemy_bullet_entity = create_square(ecs_world, size, pos, vel, color)
-
-    ecs_world.add_component(enemy_bullet_entity, CTagBullet("enemy"))
-
+        score_value = enemy_config["score_value"]
+        image = enemy_config["image"]
+        animations = enemy_config["animations"]
+        vel = pygame.Vector2(1,0) * enemies_level["velocity"]
+        create_enemy(ecs_world, pygame.Vector2(enemy_info["position"]["x"], enemy_info["position"]["y"]), vel, score_value, image, animations)
 
 def create_menu_text(ecs_world: esper.World):
     interface_data = ServiceLocator.configs_service.get("assets/cfg/interface.json")
