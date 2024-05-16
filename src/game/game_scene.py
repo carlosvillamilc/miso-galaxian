@@ -3,6 +3,7 @@ import pygame
 # Scene
 from src.ecs.components.c_input_command import CInputCommand, CommandPhase
 from src.ecs.components.tags.c_tag_bullet_player import CTagBulletPlayer
+from src.ecs.components.c_game_manager import CGameManager
 from src.ecs.systems.s_enemy_movement import system_enemy_movement
 from src.ecs.systems.s_fire_enemy import system_fire_enemy
 from src.engine.scenes.scene import Scene
@@ -18,7 +19,7 @@ from src.ecs.systems.s_collision_bullet_enemy import system_collision_bullet_ene
 from src.ecs.systems.s_collision_bullet_player import system_collision_bullet_player
 from src.ecs.systems.s_explosion import system_explosion
 from src.ecs.systems.s_update_score import system_update_score
-
+from src.ecs.systems.s_game_manager import system_game_manager
 from src.create.prefab_creator import (
     create_background,
     create_player,
@@ -45,8 +46,9 @@ class GameScene(Scene):
             self.player_surface,
         ) = create_player(self.ecs_world)
         create_input_player(self.ecs_world)
-        # create_game_start_text(self.ecs_world,self._game_engine.interface_cfg)
-        create_all_enemies(self.ecs_world)
+        start_game_entity = create_game_start_text(self.ecs_world)
+        self.game_manager = CGameManager(start_game_entity)
+        #create_all_enemies(self.ecs_world)
         create_menu_text(self.ecs_world)
 
     def do_update(self, delta_time):
@@ -72,6 +74,8 @@ class GameScene(Scene):
             ServiceLocator.globals_service.player_score,
             ServiceLocator.globals_service.player_previous_score,
         )
+        system_game_manager(self.ecs_world,self.game_manager,delta_time)
+
 
     def do_action(self, action: CInputCommand):
         print("GameScene action", action.name)
