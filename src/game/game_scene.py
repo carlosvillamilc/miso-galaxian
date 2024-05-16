@@ -1,4 +1,5 @@
 import pygame
+import time
 
 # Scene
 from src.ecs.components.c_input_command import CInputCommand, CommandPhase
@@ -15,6 +16,7 @@ from src.ecs.systems.s_collision_bullet_enemy import system_collision_bullet_ene
 from src.ecs.systems.s_collision_bullet_player import system_collision_bullet_player
 from src.ecs.systems.s_explosion import system_explosion
 from src.ecs.systems.s_update_score import system_update_score
+from src.ecs.systems.s_next_level import system_next_level
 from src.ecs.components.tags.c_tag_bullet import CTagBullet
 
 from src.create.prefab_creator import (
@@ -43,7 +45,7 @@ class GameScene(Scene):
             self.player_surface,
         ) = create_player(self.ecs_world)
         create_input_player(self.ecs_world)
-        # create_game_start_text(self.ecs_world,self._game_engine.interface_cfg)
+        # create_game_start_text(self.ecs_world, self._game_engine.interface_cfg)
         create_all_enemies(self.ecs_world)
         create_menu_text(self.ecs_world)
 
@@ -67,6 +69,9 @@ class GameScene(Scene):
             self.ecs_world,
             ServiceLocator.globals_service.player_score,
             ServiceLocator.globals_service.player_previous_score,
+        )
+        system_next_level(
+            self.ecs_world, self.run_next_level, self._game_engine.delta_time
         )
 
     def do_action(self, action: CInputCommand):
@@ -112,3 +117,22 @@ class GameScene(Scene):
         # Check if key space is pressed and switch to manu scene
         if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
             self.switch_scene("MENU_SCENE")
+
+    def run_next_level(self, delta_time: float):
+        print("run_next_level")
+        cooldown = ServiceLocator.globals_service.nex_level_cooldown
+        ServiceLocator.globals_service.nex_level_cooldown -= delta_time
+        if cooldown <= 0:
+            ServiceLocator.globals_service.next_level()
+            self.do_restart_level()
+
+    def do_destroy(self):
+        self.ecs_world.clear_database()
+
+    def do_restart_level(self):
+        self.do_destroy()
+        self.do_create()
+
+    def do_game_over(self):
+        ServiceLocator.globals_service.game_over()
+        self.switch_scene("MENU_SCENE")
