@@ -144,11 +144,7 @@ class GameScene(Scene):
                 self.ecs_world.delete_entity(self.paused_text)
 
     def do_process_events(self, event: pygame.Event) -> None:
-        # breakpoint()
         super().do_process_events(event)
-        # Check if key space is pressed and switch to manu scene
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
-            self.switch_scene("MENU_SCENE")
 
     def do_start_next_level(self):
         self.do_destroy()
