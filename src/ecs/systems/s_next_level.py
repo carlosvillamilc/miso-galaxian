@@ -14,11 +14,6 @@ def system_next_level(
     game_manager: CGameManager,
 ):
     components = world.get_components(CTagEnemy)
-    # game_manager_components = world.get_components(CGameManager)
-    # print(list(component.state for component in game_manager_components))
     if len(components) == 0 and game_manager.state == GameState.PLAY:
-        # all(
-        #     # component.state == GameState.PLAYING for component in game_manager_components
-        # )
         show_next_level(world)
         run_next_level(delta_time)
