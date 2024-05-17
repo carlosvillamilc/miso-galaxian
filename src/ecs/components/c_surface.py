@@ -29,5 +29,6 @@ class CSurface:
         return c_surf
 
     def set_text(self, text: str, font: pygame.font.Font, color: pygame.color):
+        print("CSurface set_text", text)
         self.surf = font.render(text, True, color)
         self.area = self.surf.get_rect()
