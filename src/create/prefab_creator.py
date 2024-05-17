@@ -2,8 +2,11 @@ import pygame
 import esper
 import random
 
+from src.create.utils import convert_double_digit
 from src.ecs.components.tags.c_tag_bullet_enemy import CTagBulletEnemy
 from src.ecs.components.tags.c_tag_bullet_player import CTagBulletPlayer
+from src.ecs.components.tags.c_tag_high_score import CTagHighScore
+from src.ecs.components.tags.c_tag_player_lives import CTagPlayerLives
 from src.engine.service_locator import ServiceLocator
 
 from src.ecs.components.c_surface import CSurface
@@ -144,16 +147,24 @@ def create_player_bullet(
     ecs_world: esper.World, player_position: pygame.Vector2, player_size: pygame.Vector2
 ):
     bullet_data = ServiceLocator.configs_service.get("assets/cfg/bullet.json")
-    bullet_size = pygame.Vector2(bullet_data["player"]["size"]["w"], bullet_data["player"]["size"]["h"])
+    bullet_size = pygame.Vector2(
+        bullet_data["player"]["size"]["w"], bullet_data["player"]["size"]["h"]
+    )
     position = pygame.Vector2(
         player_position.x + (player_size[0] / 2) - (bullet_size[0] / 2),
         player_position.y + (player_size[1] / 2) - (bullet_size[1] / 2),
     )
 
-    vel = pygame.Vector2(bullet_data["player"]["velocity"]["x"], bullet_data["player"]["velocity"]["y"])
-    size = pygame.Vector2(bullet_data["player"]["size"]["w"], bullet_data["player"]["size"]["h"])
+    vel = pygame.Vector2(
+        bullet_data["player"]["velocity"]["x"], bullet_data["player"]["velocity"]["y"]
+    )
+    size = pygame.Vector2(
+        bullet_data["player"]["size"]["w"], bullet_data["player"]["size"]["h"]
+    )
     color = pygame.Color(
-        bullet_data["player"]["color"]["r"], bullet_data["player"]["color"]["g"], bullet_data["player"]["color"]["b"]
+        bullet_data["player"]["color"]["r"],
+        bullet_data["player"]["color"]["g"],
+        bullet_data["player"]["color"]["b"],
     )
 
     bullet_entity = create_square(ecs_world, size, position, vel, color)
@@ -161,18 +172,35 @@ def create_player_bullet(
     ecs_world.add_component(bullet_entity, CTagBulletPlayer())
     ServiceLocator.sounds_service.play(bullet_data["player"]["sound"])
 
-def create_enemy_bullet(ecs_world: esper.World, enemy_position: pygame.Vector2, enemy_size: pygame.Vector2):
-    bullet_data = ServiceLocator.configs_service.get("assets/cfg/bullet.json")
-    bullet_size = pygame.Vector2(bullet_data["enemy"]["size"]["w"], bullet_data["enemy"]["size"]["h"])
-    position = pygame.Vector2(enemy_position.x + (enemy_size[0] / 2) - (bullet_size[0] / 2), enemy_position.y + (enemy_size[1] / 2) - (bullet_size[1] / 2))
 
-    vel = pygame.Vector2(bullet_data["enemy"]["velocity"]["x"], bullet_data["enemy"]["velocity"]["y"])
-    size = pygame.Vector2(bullet_data["enemy"]["size"]["w"], bullet_data["enemy"]["size"]["h"])
-    color = pygame.Color(bullet_data["enemy"]["color"]["r"], bullet_data["enemy"]["color"]["g"], bullet_data["enemy"]["color"]["b"])
+def create_enemy_bullet(
+    ecs_world: esper.World, enemy_position: pygame.Vector2, enemy_size: pygame.Vector2
+):
+    bullet_data = ServiceLocator.configs_service.get("assets/cfg/bullet.json")
+    bullet_size = pygame.Vector2(
+        bullet_data["enemy"]["size"]["w"], bullet_data["enemy"]["size"]["h"]
+    )
+    position = pygame.Vector2(
+        enemy_position.x + (enemy_size[0] / 2) - (bullet_size[0] / 2),
+        enemy_position.y + (enemy_size[1] / 2) - (bullet_size[1] / 2),
+    )
+
+    vel = pygame.Vector2(
+        bullet_data["enemy"]["velocity"]["x"], bullet_data["enemy"]["velocity"]["y"]
+    )
+    size = pygame.Vector2(
+        bullet_data["enemy"]["size"]["w"], bullet_data["enemy"]["size"]["h"]
+    )
+    color = pygame.Color(
+        bullet_data["enemy"]["color"]["r"],
+        bullet_data["enemy"]["color"]["g"],
+        bullet_data["enemy"]["color"]["b"],
+    )
 
     bullet_entity = create_square(ecs_world, size, position, vel, color)
 
     ecs_world.add_component(bullet_entity, CTagBulletEnemy())
+
 
 def create_text(
     world: esper.World,
@@ -316,8 +344,16 @@ def create_all_enemies(ecs_world: esper.World):
         score_value = enemy_config["score_value"]
         image = enemy_config["image"]
         animations = enemy_config["animations"]
-        vel = pygame.Vector2(1,0) * enemies_level["velocity"]
-        create_enemy(ecs_world, pygame.Vector2(enemy_info["position"]["x"], enemy_info["position"]["y"]), vel, score_value, image, animations)
+        vel = pygame.Vector2(1, 0) * enemies_level["velocity"]
+        create_enemy(
+            ecs_world,
+            pygame.Vector2(enemy_info["position"]["x"], enemy_info["position"]["y"]),
+            vel,
+            score_value,
+            image,
+            animations,
+        )
+
 
 def create_menu_text(ecs_world: esper.World):
     interface_data = ServiceLocator.configs_service.get("assets/cfg/interface.json")
@@ -431,10 +467,11 @@ def create_menu_text(ecs_world: esper.World):
     hi_score_text_font = ServiceLocator.fonts_service.get(
         interface_data["font"], hi_score_text_data["size"]
     )
-
+    text = hi_score_text_data['text']
+    ServiceLocator.globals_service.player_high_score = int(text) if ServiceLocator.globals_service.player_high_score < int(text) else ServiceLocator.globals_service.player_high_score
     hi_score_text = create_text(
         ecs_world,
-        hi_score_text_data["text"],
+        str(ServiceLocator.globals_service.player_high_score),
         hi_score_text_font,
         hi_score_text_color,
         hi_score_text_pos,
@@ -449,4 +486,123 @@ def create_menu_text(ecs_world: esper.World):
             hi_score_text_pos.y,
         ),
     )
-    ecs_world.add_component(hi_score_text, CTagScore())
+    ecs_world.add_component(hi_score_text, CTagHighScore())
+
+
+def show_game_over(ecs_world: esper.World):
+    interface_data = ServiceLocator.configs_service.get("assets/cfg/interface.json")
+    game_over_text_data = interface_data["game_over_text"]
+    game_over_text_color = pygame.color.Color(
+        game_over_text_data["color"]["r"],
+        game_over_text_data["color"]["g"],
+        game_over_text_data["color"]["b"],
+    )
+    game_over_text_pos = pygame.Vector2(
+        game_over_text_data["position"]["x"], game_over_text_data["position"]["y"]
+    )
+    game_over_text_font = ServiceLocator.fonts_service.get(
+        interface_data["font"], game_over_text_data["size"]
+    )
+
+    game_over_text = create_text(
+        ecs_world,
+        game_over_text_data["text"],
+        game_over_text_font,
+        game_over_text_color,
+        game_over_text_pos,
+    )
+    ecs_world.add_component(game_over_text, CVelocity(pygame.Vector2(0, 0)))
+
+
+def show_next_level(ecs_world: esper.World):
+    interface_data = ServiceLocator.configs_service.get("assets/cfg/interface.json")
+    next_level_text_data = interface_data["next_level_text"]
+    next_level_text_color = pygame.color.Color(
+        next_level_text_data["color"]["r"],
+        next_level_text_data["color"]["g"],
+        next_level_text_data["color"]["b"],
+    )
+    next_level_text_pos = pygame.Vector2(
+        next_level_text_data["position"]["x"], next_level_text_data["position"]["y"]
+    )
+    next_level_text_font = ServiceLocator.fonts_service.get(
+        interface_data["font"], next_level_text_data["size"]
+    )
+
+    next_level_text = create_text(
+        ecs_world,
+        next_level_text_data["text"],
+        next_level_text_font,
+        next_level_text_color,
+        next_level_text_pos,
+    )
+    ecs_world.add_component(next_level_text, CVelocity(pygame.Vector2(0, 0)))
+
+    get_ready_text_data = interface_data["get_ready_text"]
+    get_ready_text_color = pygame.color.Color(
+        get_ready_text_data["color"]["r"],
+        get_ready_text_data["color"]["g"],
+        get_ready_text_data["color"]["b"],
+    )
+    get_ready_text_pos = pygame.Vector2(
+        get_ready_text_data["position"]["x"], get_ready_text_data["position"]["y"]
+    )
+    get_ready_text_font = ServiceLocator.fonts_service.get(
+        interface_data["font"], get_ready_text_data["size"]
+    )
+
+    get_ready_text = create_text(
+        ecs_world,
+        get_ready_text_data["text"],
+        get_ready_text_font,
+        get_ready_text_color,
+        get_ready_text_pos,
+    )
+    ecs_world.add_component(get_ready_text, CVelocity(pygame.Vector2(0, 0)))
+
+
+def create_lives(ecs_world: esper.World):
+    interface_data = ServiceLocator.configs_service.get("assets/cfg/interface.json")
+    lives_data = interface_data["lives"]
+    lives_surface = ServiceLocator.images_service.get(lives_data["image"])
+    lives_pos = pygame.Vector2(lives_data["position"]["x"], lives_data["position"]["y"])
+    lives_vel = pygame.Vector2(0, 0)
+
+    for i in range(ServiceLocator.globals_service.player_lives):
+        pos = pygame.Vector2(lives_pos.x + (i * 10), lives_pos.y)
+        lives_entity = create_sprite(ecs_world, pos, lives_vel, lives_surface)
+        ecs_world.add_component(lives_entity, CVelocity(lives_vel))
+        ecs_world.add_component(lives_entity, CTagPlayerLives())
+
+
+def show_level(ecs_world: esper.World):
+    interface_data = ServiceLocator.configs_service.get("assets/cfg/interface.json")
+    level_text_data = interface_data["level_text"]
+    level_text_color = pygame.color.Color(
+        level_text_data["color"]["r"],
+        level_text_data["color"]["g"],
+        level_text_data["color"]["b"],
+    )
+    level_text_pos = pygame.Vector2(
+        level_text_data["position"]["x"], level_text_data["position"]["y"]
+    )
+    level_text_font = ServiceLocator.fonts_service.get(
+        interface_data["font"], level_text_data["size"]
+    )
+    print("current level:", ServiceLocator.globals_service.current_level)
+
+    level_text = create_text(
+        ecs_world,
+        convert_double_digit(ServiceLocator.globals_service.current_level),
+        level_text_font,
+        level_text_color,
+        level_text_pos,
+    )
+    ecs_world.add_component(level_text, CVelocity(pygame.Vector2(0, 0)))
+    # Load and show image
+    level_image_data = interface_data["level_flag"]
+    level_image = ServiceLocator.images_service.get(level_image_data["image"])
+    level_image_pos = pygame.Vector2(
+        level_image_data["position"]["x"], level_image_data["position"]["y"]
+    )
+    create_sprite(ecs_world, level_image_pos, pygame.Vector2(0, 0), level_image)

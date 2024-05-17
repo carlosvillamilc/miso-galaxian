@@ -1,4 +1,5 @@
 import pygame
+import time
 
 # Scene
 from src.ecs.components.c_input_command import CInputCommand, CommandPhase
@@ -6,6 +7,8 @@ from src.ecs.components.tags.c_tag_bullet_player import CTagBulletPlayer
 from src.ecs.components.c_game_manager import CGameManager
 from src.ecs.systems.s_enemy_movement import system_enemy_movement
 from src.ecs.systems.s_fire_enemy import system_fire_enemy
+from src.ecs.systems.s_update_high_score import system_update_high_score
+from src.ecs.systems.s_update_lives import system_update_lives
 from src.engine.scenes.scene import Scene
 from src.engine.service_locator import ServiceLocator
 
@@ -19,9 +22,12 @@ from src.ecs.systems.s_collision_bullet_enemy import system_collision_bullet_ene
 from src.ecs.systems.s_collision_bullet_player import system_collision_bullet_player
 from src.ecs.systems.s_explosion import system_explosion
 from src.ecs.systems.s_update_score import system_update_score
+from src.ecs.systems.s_next_level import system_next_level
 from src.ecs.systems.s_game_manager import system_game_manager
+from src.ecs.systems.s_game_over import system_game_over
 from src.create.prefab_creator import (
     create_background,
+    create_lives,
     create_player,
     create_input_player,
     create_player_bullet,
@@ -29,13 +35,13 @@ from src.create.prefab_creator import (
     create_game_start_text,
     create_all_enemies,
     create_menu_text,
+    show_level,
 )
 
 
 class GameScene(Scene):
 
     def do_create(self):
-        print("GameScene created")
         create_background(self.ecs_world)
         (
             self.player_entity,
@@ -46,10 +52,15 @@ class GameScene(Scene):
             self.player_surface,
         ) = create_player(self.ecs_world)
         create_input_player(self.ecs_world)
+        # create_game_start_text(self.ecs_world, self._game_engine.interface_cfg)
+        # create_all_enemies(self.ecs_world)
         start_game_entity = create_game_start_text(self.ecs_world)
         self.game_manager = CGameManager(start_game_entity)
-        #create_all_enemies(self.ecs_world)
+        create_lives(self.ecs_world)
+        show_level(self.ecs_world)
+        # create_all_enemies(self.ecs_world)
         create_menu_text(self.ecs_world)
+        self.game_over = False
 
     def do_update(self, delta_time):
         system_blink(self.ecs_world, delta_time)
@@ -69,17 +80,35 @@ class GameScene(Scene):
         system_collision_bullet_enemy(self.ecs_world)
         system_collision_bullet_player(self.ecs_world)
         system_explosion(self.ecs_world)
+        system_update_lives(self.ecs_world)
         system_update_score(
             self.ecs_world,
             ServiceLocator.globals_service.player_score,
             ServiceLocator.globals_service.player_previous_score,
         )
-        system_game_manager(self.ecs_world,self.game_manager,delta_time)
+        system_update_high_score(
+            self.ecs_world,
+            ServiceLocator.globals_service.player_high_score,
+            ServiceLocator.globals_service.player_score,
+        )
+        system_next_level(
+            self.ecs_world,
+            self.run_next_level,
+            self._game_engine.delta_time,
+            self.game_manager,
+        )
+        system_game_over(self.ecs_world, self.game_over, self.set_game_over)
+        system_game_manager(self.ecs_world, self.game_manager, delta_time)
 
+    def set_game_over(self, game_over: bool):
+        self.game_over = game_over
 
     def do_action(self, action: CInputCommand):
         print("GameScene action", action.name)
-        # breakpoint()
+        if self.game_over:
+            if action.name == "PLAYER_FIRE" and action.phase == CommandPhase.START:
+                self.do_game_over()
+            return
         if action.name == "PLAYER_LEFT":
             if action.phase == CommandPhase.START:
                 self.player_vel.vel.x -= self.player_tag.input_speed
@@ -115,8 +144,37 @@ class GameScene(Scene):
                 self.ecs_world.delete_entity(self.paused_text)
 
     def do_process_events(self, event: pygame.Event) -> None:
-        # breakpoint()
         super().do_process_events(event)
-        # Check if key space is pressed and switch to manu scene
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
-            self.switch_scene("MENU_SCENE")
+
+    def do_start_next_level(self):
+        self.do_destroy()
+        create_background(self.ecs_world)
+        (
+            self.player_entity,
+            self.player_transform,
+            self.player_vel,
+            self.player_tag,
+            self.player_status,
+            self.player_surface,
+        ) = create_player(self.ecs_world)
+        show_level(self.ecs_world)
+        create_input_player(self.ecs_world)
+        create_all_enemies(self.ecs_world)
+        create_menu_text(self.ecs_world)
+        create_lives(self.ecs_world)
+
+    def run_next_level(self, delta_time: float):
+        print("run_next_level")
+        cooldown = ServiceLocator.globals_service.next_level_cooldown
+        ServiceLocator.globals_service.next_level_cooldown -= delta_time
+        if cooldown <= 0:
+            ServiceLocator.globals_service.next_level()
+            print("current_level", ServiceLocator.globals_service.current_level)
+            self.do_start_next_level()
+
+    def do_destroy(self):
+        self.ecs_world.clear_database()
+
+    def do_game_over(self):
+        ServiceLocator.globals_service.game_over()
+        self.switch_scene("MENU_SCENE")
