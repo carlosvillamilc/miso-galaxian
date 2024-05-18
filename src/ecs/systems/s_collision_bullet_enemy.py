@@ -26,14 +26,9 @@ def system_collision_bullet_enemy(world: esper.World):
             enemy_rect.topleft = c_enemy_transform.pos.copy()
             if bullet_rect.colliderect(enemy_rect):
                 ServiceLocator.globals_service.player_score += c_enemy_tag.score_value
-                print('score_value',c_enemy_tag.score_value)
-                if ServiceLocator.globals_service.player_score > ServiceLocator.globals_service.player_high_score:
-                        ServiceLocator.globals_service.player_high_score = ServiceLocator.globals_service.player_score
-                print('player_score',ServiceLocator.globals_service.player_score)
-                print('player_high_score',ServiceLocator.globals_service.player_high_score)
                 for enemy_ghost_entity, (c_teg) in enemy_ghost_components:
-                     if c_teg.index == c_enemy_tag.index:
-                          world.delete_entity(enemy_ghost_entity)
+                    if c_teg.index == c_enemy_tag.index:
+                        world.delete_entity(enemy_ghost_entity)
                 world.delete_entity(enemy_entity)
                 world.delete_entity(bullet_entity)
                 create_explosion(world, c_enemy_transform.pos, "enemy")

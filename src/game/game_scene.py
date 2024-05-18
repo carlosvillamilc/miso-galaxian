@@ -29,6 +29,7 @@ from src.ecs.systems.s_next_level import system_next_level
 from src.ecs.systems.s_game_manager import system_game_manager
 from src.ecs.systems.s_game_over import system_game_over
 from src.create.prefab_creator import (
+    create_all_enemies,
     create_background,
     create_lives,
     create_player,
@@ -39,6 +40,7 @@ from src.create.prefab_creator import (
     create_menu_text,
     show_level,
 )
+
 
 class GameScene(Scene):
 
@@ -76,9 +78,13 @@ class GameScene(Scene):
         system_screen_bullet(self.ecs_world, self._game_engine.screen)
         self.bullets = len(self.ecs_world.get_component(CTagBulletPlayer))
         system_animation(self.ecs_world, delta_time)
-        self.player_explosion_time =system_collision_player_enemy(self.ecs_world, self.player_entity, elapsed_time, self.player_explosion_time)
+        self.player_explosion_time = system_collision_player_enemy(
+            self.ecs_world, self.player_entity, elapsed_time, self.player_explosion_time
+        )
         system_collision_bullet_enemy(self.ecs_world)
-        self.player_explosion_time = system_collision_bullet_player(self.ecs_world, self.player_entity, elapsed_time, self.player_explosion_time)
+        self.player_explosion_time = system_collision_bullet_player(
+            self.ecs_world, self.player_entity, elapsed_time, self.player_explosion_time
+        )
         system_explosion(self.ecs_world)
         system_update_lives(self.ecs_world)
         system_update_score(
@@ -122,7 +128,9 @@ class GameScene(Scene):
             if ServiceLocator.globals_service.paused:
                 return
 
-            player_has_surface = self.ecs_world.has_component(self.player_entity, CSurface)
+            player_has_surface = self.ecs_world.has_component(
+                self.player_entity, CSurface
+            )
             if self.bullets < 1 and player_has_surface:
                 create_player_bullet(
                     self.ecs_world,
