@@ -19,7 +19,6 @@ from src.ecs.systems.s_blink import system_blink
 
 class MenuScene(Scene):
     def do_create(self):
-        print("MenuScene created")
         create_background(self.ecs_world)
         create_title_logo(self.ecs_world)
         create_press_start_game_text(self.ecs_world)
@@ -40,7 +39,6 @@ class MenuScene(Scene):
         system_vertical_logo_movement(self.ecs_world)
 
     def do_action(self, action: CInputCommand):
-        print("MenuScene action")
         if action.name == "START" and action.phase == CommandPhase.START:
             sounds_data = ServiceLocator.configs_service.get("assets/cfg/sounds.json")
             ServiceLocator.sounds_service.play(sounds_data["start_game"])

@@ -589,7 +589,6 @@ def show_level(ecs_world: esper.World):
     level_text_font = ServiceLocator.fonts_service.get(
         interface_data["font"], level_text_data["size"]
     )
-    print("current level:", ServiceLocator.globals_service.current_level)
 
     level_text = create_text(
         ecs_world,

@@ -66,9 +66,6 @@ class GameScene(Scene):
         system_blink(self.ecs_world, delta_time)
         if ServiceLocator.globals_service.paused:
             return
-        # if self._game_engine.game_paused:
-        #    return
-        # print("GameScene updated")
         system_movement(self.ecs_world, delta_time)
         system_enemy_movement(self.ecs_world)
         system_fire_enemy(self.ecs_world)
@@ -104,7 +101,6 @@ class GameScene(Scene):
         self.game_over = game_over
 
     def do_action(self, action: CInputCommand):
-        print("GameScene action", action.name)
         if self.game_over:
             if action.name == "PLAYER_FIRE" and action.phase == CommandPhase.START:
                 self.do_game_over()
@@ -122,7 +118,6 @@ class GameScene(Scene):
         if action.name == "PLAYER_FIRE" and action.phase == CommandPhase.START:
             if ServiceLocator.globals_service.paused:
                 return
-            # breakpoint()
             if self.bullets < 1:
                 create_player_bullet(
                     self.ecs_world,
@@ -164,12 +159,10 @@ class GameScene(Scene):
         create_lives(self.ecs_world)
 
     def run_next_level(self, delta_time: float):
-        print("run_next_level")
         cooldown = ServiceLocator.globals_service.next_level_cooldown
         ServiceLocator.globals_service.next_level_cooldown -= delta_time
         if cooldown <= 0:
             ServiceLocator.globals_service.next_level()
-            print("current_level", ServiceLocator.globals_service.current_level)
             self.do_start_next_level()
 
     def do_destroy(self):
