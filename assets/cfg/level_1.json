@@ -1,4 +1,5 @@
 {
+    "follow_force": 125,
     "velocity": 10,
     "enemies_info": [
         {

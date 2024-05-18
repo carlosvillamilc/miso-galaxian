@@ -24,11 +24,9 @@ class MenuScene(Scene):
         create_press_start_game_text(self.ecs_world)
         create_menu_text(self.ecs_world)
         start_game_action = self.ecs_world.create_entity()
-        self.ecs_world.add_component(
-            start_game_action, CInputCommand("START", pygame.K_z)
-        )
+        self.ecs_world.add_component(start_game_action, CInputCommand("START", pygame.K_z))
 
-    def do_update(self, delta_time):
+    def do_update(self, delta_time, elapsed_time):
         system_blink(self.ecs_world, delta_time)
         if ServiceLocator.globals_service.paused:
             return

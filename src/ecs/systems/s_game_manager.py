@@ -1,8 +1,7 @@
 import esper
 
 from src.ecs.components.c_game_manager import CGameManager, GameState
-from src.create.prefab_creator import create_all_enemies, create_player_bullet
-from src.engine.service_locator import ServiceLocator
+from src.create.prefab_creator import create_all_enemies
 
 def system_game_manager(ecs_world:esper.World, c_game_manager:CGameManager, delta_time:float):
     if c_game_manager.state == GameState.START:
