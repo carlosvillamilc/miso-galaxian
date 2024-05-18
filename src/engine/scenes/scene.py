@@ -9,7 +9,6 @@ from src.ecs.systems.s_rendering import system_rendering
 # Components
 from src.ecs.components.c_input_command import CInputCommand
 
-
 class Scene:
     def __init__(self, game_engine: "src.engine.game_engine.GameEngine") -> None:
         self.ecs_world: esper.World = esper.World()
@@ -19,8 +18,8 @@ class Scene:
     def do_process_events(self, event: pygame.event.Event) -> None:
         system_input(self.ecs_world, event, self.do_action)
 
-    def simulate(self, delta_time):
-        self.do_update(delta_time)
+    def simulate(self, delta_time, elapsed_time):
+        self.do_update(delta_time, elapsed_time)
         self.ecs_world._clear_dead_entities()
 
     def clean(self):
@@ -33,7 +32,7 @@ class Scene:
     def do_create(self):
         pass
 
-    def do_update(self, delta_time):
+    def do_update(self, delta_time, elapsed_time):
         pass
 
     def do_draw(self, screen):

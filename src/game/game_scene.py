@@ -2,9 +2,12 @@ import pygame
 
 # Scene
 from src.ecs.components.c_input_command import CInputCommand, CommandPhase
+from src.ecs.components.c_surface import CSurface
 from src.ecs.components.tags.c_tag_bullet_player import CTagBulletPlayer
 from src.ecs.components.c_game_manager import CGameManager
+from src.ecs.systems.s_collision_player_enemy import system_collision_player_enemy
 from src.ecs.systems.s_enemy_movement import system_enemy_movement
+from src.ecs.systems.s_enemy_steering import system_enemy_steering
 from src.ecs.systems.s_fire_enemy import system_fire_enemy
 from src.engine.scenes.scene import Scene
 from src.engine.service_locator import ServiceLocator
@@ -27,10 +30,8 @@ from src.create.prefab_creator import (
     create_player_bullet,
     create_paused_text,
     create_game_start_text,
-    create_all_enemies,
     create_menu_text,
 )
-
 
 class GameScene(Scene):
 
@@ -48,26 +49,25 @@ class GameScene(Scene):
         create_input_player(self.ecs_world)
         start_game_entity = create_game_start_text(self.ecs_world)
         self.game_manager = CGameManager(start_game_entity)
-        #create_all_enemies(self.ecs_world)
+        self.player_explosion_time = 0
         create_menu_text(self.ecs_world)
 
-    def do_update(self, delta_time):
+    def do_update(self, delta_time, elapsed_time):
         system_blink(self.ecs_world, delta_time)
         if ServiceLocator.globals_service.paused:
             return
-        # if self._game_engine.game_paused:
-        #    return
-        # print("GameScene updated")
         system_movement(self.ecs_world, delta_time)
         system_enemy_movement(self.ecs_world)
+        system_enemy_steering(self.ecs_world, self.player_entity, 1, delta_time)
         system_fire_enemy(self.ecs_world)
         system_background(self.ecs_world, self._game_engine.screen, delta_time)
         system_player_movement(self.ecs_world, self._game_engine.screen)
         system_screen_bullet(self.ecs_world, self._game_engine.screen)
         self.bullets = len(self.ecs_world.get_component(CTagBulletPlayer))
         system_animation(self.ecs_world, delta_time)
+        self.player_explosion_time =system_collision_player_enemy(self.ecs_world, self.player_entity, elapsed_time, self.player_explosion_time)
         system_collision_bullet_enemy(self.ecs_world)
-        system_collision_bullet_player(self.ecs_world)
+        self.player_explosion_time = system_collision_bullet_player(self.ecs_world, self.player_entity, elapsed_time, self.player_explosion_time)
         system_explosion(self.ecs_world)
         system_update_score(
             self.ecs_world,
@@ -75,7 +75,6 @@ class GameScene(Scene):
             ServiceLocator.globals_service.player_previous_score,
         )
         system_game_manager(self.ecs_world,self.game_manager,delta_time)
-
 
     def do_action(self, action: CInputCommand):
         print("GameScene action", action.name)
@@ -94,7 +93,8 @@ class GameScene(Scene):
             if ServiceLocator.globals_service.paused:
                 return
             # breakpoint()
-            if self.bullets < 1:
+            player_has_surface = self.ecs_world.has_component(self.player_entity, CSurface)
+            if self.bullets < 1 and player_has_surface:
                 create_player_bullet(
                     self.ecs_world,
                     self.player_transform.pos,

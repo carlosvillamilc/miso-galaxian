@@ -44,6 +44,7 @@ class GameEngine:
         self._scene_name_to_switch: str = None
 
         self.delta_time = 0
+        self.elapsed_time = 0
         self.framerate = self.window_cfg.get("framerate")
         self.clock = pygame.time.Clock()
 
@@ -71,6 +72,7 @@ class GameEngine:
     def _calculate_time(self):
         self.clock.tick(self.framerate)
         self.delta_time = self.clock.get_time() / 1000.0
+        self.elapsed_time += self.delta_time
 
     def _process_events(self):
         for event in pygame.event.get():
@@ -79,7 +81,7 @@ class GameEngine:
                 self.is_running = False
 
     def _update(self):
-        self._current_scene.simulate(self.delta_time)
+        self._current_scene.simulate(self.delta_time, self.elapsed_time)
 
     def _draw(self):
         self.screen.fill(

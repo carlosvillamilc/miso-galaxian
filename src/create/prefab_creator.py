@@ -2,8 +2,10 @@ import pygame
 import esper
 import random
 
+from src.ecs.components.c_steering import CSteering
 from src.ecs.components.tags.c_tag_bullet_enemy import CTagBulletEnemy
 from src.ecs.components.tags.c_tag_bullet_player import CTagBulletPlayer
+from src.ecs.components.tags.c_tag_enemy_ghost import CTagEnemyGhost
 from src.engine.service_locator import ServiceLocator
 
 from src.ecs.components.c_surface import CSurface
@@ -63,8 +65,8 @@ def create_sprite(
     surface: pygame.Surface,
 ) -> int:
     sprite_entity = ecs_world.create_entity()
-    ecs_world.add_component(sprite_entity, CTransform(pos))
-    ecs_world.add_component(sprite_entity, CVelocity(vel))
+    ecs_world.add_component(sprite_entity, CTransform(pos.copy()))
+    ecs_world.add_component(sprite_entity, CVelocity(vel.copy()))
     ecs_world.add_component(sprite_entity, CSurface.from_surface(surface))
     return sprite_entity
 
@@ -186,7 +188,6 @@ def create_text(
     world.add_component(text_entity, CSurface.from_text(text, font, color))
     return text_entity
 
-
 def create_press_start_game_text(ecs_world: esper.World) -> None:
     interface_data = ServiceLocator.configs_service.get("assets/cfg/interface.json")
     title_text_data = interface_data["title_text"]
@@ -286,21 +287,27 @@ def create_explosion(ecs_world: esper.World, pos: pygame.Vector2, type: str):
 def create_enemy(
     ecs_world: esper.World,
     pos: pygame.Vector2,
-    velocity: pygame.Vector2,
+    vel: pygame.Vector2,
     score_value: float,
     image_path: str,
     animations: dict,
+    index:int
 ) -> None:
     image = ServiceLocator.images_service.get(image_path)
-    enemy_entity = create_sprite(ecs_world, pos, velocity, image)
-    ecs_world.add_component(enemy_entity, CTagEnemy(score_value))
+    enemy_entity = create_sprite(ecs_world, pos, vel, image)
+    ecs_world.add_component(enemy_entity, CTagEnemy(score_value, index))
     ecs_world.add_component(enemy_entity, CAnimation(animations))
-
+    ecs_world.add_component(enemy_entity, CSteering())
+    enemy_ghost_entity = ecs_world.create_entity()
+    ecs_world.add_component(enemy_ghost_entity, CTransform(pos))
+    ecs_world.add_component(enemy_ghost_entity, CVelocity(vel))
+    ecs_world.add_component(enemy_ghost_entity, CTagEnemyGhost(index))
 
 def create_all_enemies(ecs_world: esper.World):
-    enemies_level = ServiceLocator.configs_service.get("assets/cfg/level_01.json")
+    enemies_level = ServiceLocator.configs_service.get("assets/cfg/level_1.json")
     enemies_info = enemies_level["enemies_info"]
     enemies_data = ServiceLocator.configs_service.get("assets/cfg/enemies.json")
+    count = 0
 
     for enemy_info in enemies_info:
         enemy_config = None
@@ -317,7 +324,8 @@ def create_all_enemies(ecs_world: esper.World):
         image = enemy_config["image"]
         animations = enemy_config["animations"]
         vel = pygame.Vector2(1,0) * enemies_level["velocity"]
-        create_enemy(ecs_world, pygame.Vector2(enemy_info["position"]["x"], enemy_info["position"]["y"]), vel, score_value, image, animations)
+        create_enemy(ecs_world, pygame.Vector2(enemy_info["position"]["x"], enemy_info["position"]["y"]), vel, score_value, image, animations, count)
+        count += 1
 
 def create_menu_text(ecs_world: esper.World):
     interface_data = ServiceLocator.configs_service.get("assets/cfg/interface.json")

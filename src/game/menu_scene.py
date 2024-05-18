@@ -23,8 +23,7 @@ class MenuScene(Scene):
         start_game_action = self.ecs_world.create_entity()
         self.ecs_world.add_component(start_game_action, CInputCommand("START", pygame.K_z))
 
-
-    def do_update(self, delta_time):
+    def do_update(self, delta_time, elapsed_time):
         #print("MenuScene updated")
         system_blink(self.ecs_world, delta_time)
         if ServiceLocator.globals_service.paused:
@@ -48,5 +47,3 @@ class MenuScene(Scene):
         #     sounds_data = ServiceLocator.configs_service.get("assets/cfg/sounds.json")
         #     ServiceLocator.sounds_service.play(sounds_data["start_game"])
         #     self.switch_scene("GAME_SCENE")
-            
-
