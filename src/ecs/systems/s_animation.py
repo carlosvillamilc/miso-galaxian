@@ -12,8 +12,6 @@ def system_animation(ecs_world: esper.World, delta_time:float):
         c_a.current_animation_time -= delta_time
         # 2. Cuando current_time <=0, hacemos cambio de frame
         if c_a.current_animation_time <=0:
-            #print(c_a.current_animation)
-            #breakpoint()
             c_a.current_animation_time = c_a.animations_list[c_a.current_animation].framerate
             c_a.current_frame += 1
         # 3. Limitar el frame con sus propiendades de start y end

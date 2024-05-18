@@ -32,6 +32,7 @@ def system_collision_bullet_player(ecs_world:esper.World, player_entity:int, ela
                 player_explosion_time = elapsed_time
                 ecs_world.delete_entity(bullet_entity)
                 create_explosion(ecs_world, pygame.Vector2(p_t.pos.x - 10, p_t.pos.y - 10), "player")
+                ServiceLocator.globals_service.player_lives -= 1
 
     elif time_difference < 3:
         if player_has_surface:

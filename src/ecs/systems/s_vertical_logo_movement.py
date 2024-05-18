@@ -11,8 +11,6 @@ def system_vertical_logo_movement(ecs_world:esper.World):
             c_tr.pos.y = c_vc.target_start_y
         else:
             c_v.vel.y = c_vc.speed
-            print(c_tr.pos.y, c_vc.target_end_y)
-            print(c_v.vel.y)
             if c_tr.pos.y <= c_vc.target_end_y:
                 c_tr.pos.y = c_vc.target_end_y
                 c_v.vel.y = 0

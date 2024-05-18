@@ -1,6 +1,6 @@
 {
     "font": "./assets/fnt/PressStart2P.ttf",
-    "title_text":{
+    "title_text": {
         "color": {
             "r": 255,
             "g": 0,
@@ -11,7 +11,7 @@
         "blink_rate": 0.5,
         "text": "PRESS Z TO START",
         "size": 8,
-        "position":{
+        "position": {
             "x": 65,
             "y": 160
         }
@@ -104,6 +104,45 @@
             "y": 30
         }
     },
+    "game_over_text": {
+        "text": "GAME OVER",
+        "size": 8,
+        "color": {
+            "r": 255,
+            "g": 255,
+            "b": 255
+        },
+        "position": {
+            "x": 95,
+            "y": 160
+        }
+    },
+    "next_level_text": {
+        "text": "LEVEL COMPLETE",
+        "size": 8,
+        "color": {
+            "r": 255,
+            "g": 255,
+            "b": 255
+        },
+        "position": {
+            "x": 70,
+            "y": 150
+        }
+    },
+    "get_ready_text": {
+        "text": "GET READY FOR NEXT LEVEL",
+        "size": 8,
+        "color": {
+            "r": 255,
+            "g": 0,
+            "b": 0
+        },
+        "position": {
+            "x": 30,
+            "y": 170
+        }
+    },
     "normal_text_color": {
         "r": 255,
         "g": 255,
@@ -123,5 +162,32 @@
         },
         "logo_speed": -50,
         "logo_offset": 240
+    },
+    "lives": {
+        "image": "./assets/img/invaders_life.png",
+        "position": {
+            "x": 165,
+            "y": 32
+        }
+    },
+    "level_flag": {
+        "image": "./assets/img/invaders_level_flag.png",
+        "position": {
+            "x": 200,
+            "y": 28
+        }
+    },
+    "level_text": {
+        "text": "",
+        "size": 8,
+        "color": {
+            "r": 255,
+            "g": 255,
+            "b": 255
+        },
+        "position": {
+            "x": 220,
+            "y": 28
+        }
     }
 }
