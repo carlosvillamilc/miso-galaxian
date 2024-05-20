@@ -71,20 +71,18 @@ class GameScene(Scene):
             return
         system_movement(self.ecs_world, delta_time)
         system_enemy_movement(self.ecs_world)
-        system_enemy_steering(self.ecs_world, self.player_entity, 1, delta_time)
-        system_fire_enemy(self.ecs_world)
+        if not self.game_over:
+            system_enemy_steering(self.ecs_world, self.player_entity, 1, delta_time)
+            system_fire_enemy(self.ecs_world)
+            self.player_explosion_time = system_collision_player_enemy(self.ecs_world, self.player_entity, elapsed_time, self.player_explosion_time)
+            self.player_explosion_time = system_collision_bullet_player(self.ecs_world, self.player_entity, elapsed_time, self.player_explosion_time)
+            system_player_movement(self.ecs_world, self._game_engine.screen)
+
         system_background(self.ecs_world, self._game_engine.screen, delta_time)
-        system_player_movement(self.ecs_world, self._game_engine.screen)
         system_screen_bullet(self.ecs_world, self._game_engine.screen)
         self.bullets = len(self.ecs_world.get_component(CTagBulletPlayer))
         system_animation(self.ecs_world, delta_time)
-        self.player_explosion_time = system_collision_player_enemy(
-            self.ecs_world, self.player_entity, elapsed_time, self.player_explosion_time
-        )
         system_collision_bullet_enemy(self.ecs_world)
-        self.player_explosion_time = system_collision_bullet_player(
-            self.ecs_world, self.player_entity, elapsed_time, self.player_explosion_time
-        )
         system_explosion(self.ecs_world)
         system_update_lives(self.ecs_world)
         system_update_score(
@@ -103,7 +101,7 @@ class GameScene(Scene):
             self._game_engine.delta_time,
             self.game_manager,
         )
-        system_game_over(self.ecs_world, self.game_over, self.set_game_over)
+        system_game_over(self.ecs_world, self.game_over, self.set_game_over, self.player_entity)
         system_game_manager(self.ecs_world, self.game_manager, delta_time)
 
     def set_game_over(self, game_over: bool):
