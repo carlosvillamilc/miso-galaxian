@@ -64,10 +64,12 @@ class GameScene(Scene):
 
     def do_update(self, delta_time, elapsed_time):
         system_blink(self.ecs_world, delta_time)
+        system_background(self.ecs_world, self._game_engine.screen, delta_time)
         if ServiceLocator.globals_service.paused:
             return
         system_movement(self.ecs_world, delta_time)
         system_enemy_movement(self.ecs_world)
+        
         if not self.game_over:
             system_enemy_steering(self.ecs_world, self.player_entity, 1, delta_time)
             system_fire_enemy(self.ecs_world)
@@ -75,7 +77,6 @@ class GameScene(Scene):
             self.player_explosion_time = system_collision_bullet_player(self.ecs_world, self.player_entity, elapsed_time, self.player_explosion_time)
             system_player_movement(self.ecs_world, self._game_engine.screen)
 
-        system_background(self.ecs_world, self._game_engine.screen, delta_time)
         system_screen_bullet(self.ecs_world, self._game_engine.screen)
         self.bullets = len(self.ecs_world.get_component(CTagBulletPlayer))
         system_animation(self.ecs_world, delta_time)
