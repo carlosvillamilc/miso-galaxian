@@ -111,7 +111,6 @@ class GameScene(Scene):
                 self.do_game_over()
             return
         if action.name == "PLAYER_LEFT":
-            print(action.phase, '------------', self.input_movement_start)
             if action.phase == CommandPhase.START:
                 self.input_movement_start = True
                 self.player_vel.vel.x -= self.player_tag.input_speed
