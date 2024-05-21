@@ -61,7 +61,6 @@ class GameScene(Scene):
         show_level(self.ecs_world)
         create_menu_text(self.ecs_world)
         self.game_over = False
-        self.input_movement_start = False
 
     def do_update(self, delta_time, elapsed_time):
         system_blink(self.ecs_world, delta_time)
@@ -112,15 +111,13 @@ class GameScene(Scene):
             return
         if action.name == "PLAYER_LEFT":
             if action.phase == CommandPhase.START:
-                self.input_movement_start = True
                 self.player_vel.vel.x -= self.player_tag.input_speed
-            elif action.phase == CommandPhase.END and self.input_movement_start == True:
+            elif action.phase == CommandPhase.END and action.input_start == True:
                 self.player_vel.vel.x += self.player_tag.input_speed
         if action.name == "PLAYER_RIGHT":
             if action.phase == CommandPhase.START:
-                self.input_movement_start = True
                 self.player_vel.vel.x += self.player_tag.input_speed
-            elif action.phase == CommandPhase.END and self.input_movement_start == True:
+            elif action.phase == CommandPhase.END and action.input_start == True:
                 self.player_vel.vel.x -= self.player_tag.input_speed
         if action.name == "PLAYER_FIRE" and action.phase == CommandPhase.START:
             if ServiceLocator.globals_service.paused:
@@ -168,7 +165,6 @@ class GameScene(Scene):
         create_all_enemies(self.ecs_world)
         create_menu_text(self.ecs_world)
         create_lives(self.ecs_world)
-        self.input_movement_start = False
 
     def run_next_level(self, delta_time: float):
         cooldown = ServiceLocator.globals_service.next_level_cooldown
@@ -183,4 +179,3 @@ class GameScene(Scene):
     def do_game_over(self):
         ServiceLocator.globals_service.game_over()
         self.switch_scene("MENU_SCENE")
-        self.input_movement_start = False
