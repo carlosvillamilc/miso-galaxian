@@ -1,5 +1,4 @@
 import pygame
-import time
 
 # Scene
 from src.ecs.components.c_input_command import CInputCommand, CommandPhase
@@ -55,8 +54,6 @@ class GameScene(Scene):
             self.player_surface,
         ) = create_player(self.ecs_world)
         create_input_player(self.ecs_world)
-        # create_game_start_text(self.ecs_world, self._game_engine.interface_cfg)
-        # create_all_enemies(self.ecs_world)
         start_game_entity = create_game_start_text(self.ecs_world)
         self.game_manager = CGameManager(start_game_entity)
         self.player_explosion_time = 0
@@ -64,6 +61,7 @@ class GameScene(Scene):
         show_level(self.ecs_world)
         create_menu_text(self.ecs_world)
         self.game_over = False
+        self.input_movement_start = False
 
     def do_update(self, delta_time, elapsed_time):
         system_blink(self.ecs_world, delta_time)
@@ -113,14 +111,17 @@ class GameScene(Scene):
                 self.do_game_over()
             return
         if action.name == "PLAYER_LEFT":
+            print(action.phase, '------------', self.input_movement_start)
             if action.phase == CommandPhase.START:
+                self.input_movement_start = True
                 self.player_vel.vel.x -= self.player_tag.input_speed
-            else:
+            elif action.phase == CommandPhase.END and self.input_movement_start == True:
                 self.player_vel.vel.x += self.player_tag.input_speed
         if action.name == "PLAYER_RIGHT":
             if action.phase == CommandPhase.START:
+                self.input_movement_start = True
                 self.player_vel.vel.x += self.player_tag.input_speed
-            else:
+            elif action.phase == CommandPhase.END and self.input_movement_start == True:
                 self.player_vel.vel.x -= self.player_tag.input_speed
         if action.name == "PLAYER_FIRE" and action.phase == CommandPhase.START:
             if ServiceLocator.globals_service.paused:
@@ -168,6 +169,7 @@ class GameScene(Scene):
         create_all_enemies(self.ecs_world)
         create_menu_text(self.ecs_world)
         create_lives(self.ecs_world)
+        self.input_movement_start = False
 
     def run_next_level(self, delta_time: float):
         cooldown = ServiceLocator.globals_service.next_level_cooldown
@@ -182,3 +184,4 @@ class GameScene(Scene):
     def do_game_over(self):
         ServiceLocator.globals_service.game_over()
         self.switch_scene("MENU_SCENE")
+        self.input_movement_start = False

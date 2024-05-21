@@ -1,5 +1,4 @@
 import esper
-import pygame
 from src.ecs.components.c_animation import CAnimation
 from src.ecs.components.c_surface import CSurface
 
