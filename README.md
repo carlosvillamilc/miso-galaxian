@@ -34,6 +34,6 @@ De igual manera, se incluyen dos modos adicionales, de acuerdo con el material d
 
 - **Borrar enemigo:** Ubicar el mouse sobre el enemigo a borrar y dar clic medio del mouse.
 
-2. **Modo debug:** Se activa con la tecla `Ctrl-Izq` y tiene dos sub-modos, el modo debug de posiciones-tamaños y el modo debug de velocidades, cada uno se activa volviendo a teclar la misma tecla referenciada anteriormente.
+2. **Modo debug:** Se activa con la tecla `Ctrl-Izq` y tiene dos sub-modos, el modo debug de posiciones-tamaños y el modo debug de velocidades, cada uno se activa volviendo a teclar la misma tecla.
 
     Como tal ambos sub-modos presentan la respectiva información a las ques hacen referencia acerca de las entidades que tienen estos componentes. Lo importante a tener en cuenta es que para ambos, los enemigos que están en su movimiento regular no fue incluida esta información ya que al ser tantos se recargaba de mucha información la pantalla.
