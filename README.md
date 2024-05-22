@@ -7,6 +7,8 @@
 ## Arquitectura
 El desarrollo del juego `miso-galaxian` como proyecto final del curso "Introducción al desarrollo de videojuegos" fue hecho haciendo uso de la arquitectura ECS, así como de los diversos patrones (game-loop, command, service-locator, steering-behaviours) vistos en las ocho semanas de clase.
 
+Adicionalmente, para las escenas se utilizó programación orientada a objetos (POO) utilizando herencias y objetos abstractos.
+
 ## Dinámicas del videojuego
 El videojuego se basa en el juego clásico "Galaxian" de la Nintento Entertainment System (NES) de Nintendo, por lo cual busca emular al máximo sus características. Entre estas encontramos:
 
@@ -33,6 +35,8 @@ De igual manera, se incluyen dos modos adicionales, de acuerdo con el material d
 - **Arrastar enemigo:** Ubicar el mouse sobre el enemigo a arrastrar y con el clic izquierdo sostenido, arrastrarlo hasta la ubicación deseada.
 
 - **Borrar enemigo:** Ubicar el mouse sobre el enemigo a borrar y dar clic medio del mouse.
+
+- **Guardar el nivel editado:** Accesible mediante la tecla `Enter`, esta acción permite guardar la configuración realizada en pantalla para los enemigos presentes. Esta configuración se guarda en un archivo llamado `editor_level.json` el cual luego puede ser usado para usarse como nivel activo del juego.
 
 2. **Modo debug:** Se activa con la tecla `Ctrl-Izq` y tiene dos sub-modos, el modo debug de posiciones-tamaños y el modo debug de velocidades, cada uno se activa volviendo a teclar la misma tecla.
 
