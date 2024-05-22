@@ -5,7 +5,7 @@
 - Daniel Babativa
 
 ## Arquitectura
-El desarrollo del juego `miso-galaxian` como proyecto final del curso "Introducción al desarrollo de videojuegos" fue hecho haciendo uso de la arquitectura ECS, así como de los diversos patrones (game-loop, service-locator, steering-behaviours) vistos en las ocho semanas de clase.
+El desarrollo del juego `miso-galaxian` como proyecto final del curso "Introducción al desarrollo de videojuegos" fue hecho haciendo uso de la arquitectura ECS, así como de los diversos patrones (game-loop, command, service-locator, steering-behaviours) vistos en las ocho semanas de clase.
 
 ## Dinámicas del videojuego
 El videojuego se basa en el juego clásico "Galaxian" de la Nintento Entertainment System (NES) de Nintendo, por lo cual busca emular al máximo sus características. Entre estas encontramos:
