@@ -1,0 +1,328 @@
+{
+    "follow_force": 125,
+    "velocity": 10,
+    "enemies_info": [
+        {
+            "enemy_type": "enemy_04",
+            "position": {
+                "x": 93,
+                "y": 42
+            }
+        },
+        {
+            "enemy_type": "enemy_04",
+            "position": {
+                "x": 147,
+                "y": 42
+            }
+        },
+        {
+            "enemy_type": "enemy_03",
+            "position": {
+                "x": 76,
+                "y": 58
+            }
+        },
+        {
+            "enemy_type": "enemy_03",
+            "position": {
+                "x": 94,
+                "y": 58
+            }
+        },
+        {
+            "enemy_type": "enemy_03",
+            "position": {
+                "x": 112,
+                "y": 58
+            }
+        },
+        {
+            "enemy_type": "enemy_03",
+            "position": {
+                "x": 130,
+                "y": 58
+            }
+        },
+        {
+            "enemy_type": "enemy_03",
+            "position": {
+                "x": 148,
+                "y": 58
+            }
+        },
+        {
+            "enemy_type": "enemy_03",
+            "position": {
+                "x": 166,
+                "y": 58
+            }
+        },
+        {
+            "enemy_type": "enemy_02",
+            "position": {
+                "x": 58,
+                "y": 72
+            }
+        },
+        {
+            "enemy_type": "enemy_02",
+            "position": {
+                "x": 76,
+                "y": 72
+            }
+        },
+        {
+            "enemy_type": "enemy_02",
+            "position": {
+                "x": 94,
+                "y": 72
+            }
+        },
+        {
+            "enemy_type": "enemy_02",
+            "position": {
+                "x": 112,
+                "y": 72
+            }
+        },
+        {
+            "enemy_type": "enemy_02",
+            "position": {
+                "x": 130,
+                "y": 72
+            }
+        },
+        {
+            "enemy_type": "enemy_02",
+            "position": {
+                "x": 148,
+                "y": 72
+            }
+        },
+        {
+            "enemy_type": "enemy_02",
+            "position": {
+                "x": 166,
+                "y": 72
+            }
+        },
+        {
+            "enemy_type": "enemy_02",
+            "position": {
+                "x": 184,
+                "y": 72
+            }
+        },
+        {
+            "enemy_type": "enemy_01",
+            "position": {
+                "x": 42,
+                "y": 85
+            }
+        },
+        {
+            "enemy_type": "enemy_01",
+            "position": {
+                "x": 60,
+                "y": 85
+            }
+        },
+        {
+            "enemy_type": "enemy_01",
+            "position": {
+                "x": 78,
+                "y": 85
+            }
+        },
+        {
+            "enemy_type": "enemy_01",
+            "position": {
+                "x": 96,
+                "y": 85
+            }
+        },
+        {
+            "enemy_type": "enemy_01",
+            "position": {
+                "x": 114,
+                "y": 85
+            }
+        },
+        {
+            "enemy_type": "enemy_01",
+            "position": {
+                "x": 132,
+                "y": 85
+            }
+        },
+        {
+            "enemy_type": "enemy_01",
+            "position": {
+                "x": 150,
+                "y": 85
+            }
+        },
+        {
+            "enemy_type": "enemy_01",
+            "position": {
+                "x": 168,
+                "y": 85
+            }
+        },
+        {
+            "enemy_type": "enemy_01",
+            "position": {
+                "x": 186,
+                "y": 85
+            }
+        },
+        {
+            "enemy_type": "enemy_01",
+            "position": {
+                "x": 204,
+                "y": 85
+            }
+        },
+        {
+            "enemy_type": "enemy_01",
+            "position": {
+                "x": 42,
+                "y": 100
+            }
+        },
+        {
+            "enemy_type": "enemy_01",
+            "position": {
+                "x": 60,
+                "y": 100
+            }
+        },
+        {
+            "enemy_type": "enemy_01",
+            "position": {
+                "x": 78,
+                "y": 100
+            }
+        },
+        {
+            "enemy_type": "enemy_01",
+            "position": {
+                "x": 96,
+                "y": 100
+            }
+        },
+        {
+            "enemy_type": "enemy_01",
+            "position": {
+                "x": 114,
+                "y": 100
+            }
+        },
+        {
+            "enemy_type": "enemy_01",
+            "position": {
+                "x": 132,
+                "y": 100
+            }
+        },
+        {
+            "enemy_type": "enemy_01",
+            "position": {
+                "x": 150,
+                "y": 100
+            }
+        },
+        {
+            "enemy_type": "enemy_01",
+            "position": {
+                "x": 168,
+                "y": 100
+            }
+        },
+        {
+            "enemy_type": "enemy_01",
+            "position": {
+                "x": 186,
+                "y": 100
+            }
+        },
+        {
+            "enemy_type": "enemy_01",
+            "position": {
+                "x": 204,
+                "y": 100
+            }
+        },
+        {
+            "enemy_type": "enemy_01",
+            "position": {
+                "x": 42,
+                "y": 113
+            }
+        },
+        {
+            "enemy_type": "enemy_01",
+            "position": {
+                "x": 60,
+                "y": 113
+            }
+        },
+        {
+            "enemy_type": "enemy_01",
+            "position": {
+                "x": 78,
+                "y": 113
+            }
+        },
+        {
+            "enemy_type": "enemy_01",
+            "position": {
+                "x": 96,
+                "y": 113
+            }
+        },
+        {
+            "enemy_type": "enemy_01",
+            "position": {
+                "x": 114,
+                "y": 113
+            }
+        },
+        {
+            "enemy_type": "enemy_01",
+            "position": {
+                "x": 132,
+                "y": 113
+            }
+        },
+        {
+            "enemy_type": "enemy_01",
+            "position": {
+                "x": 150,
+                "y": 113
+            }
+        },
+        {
+            "enemy_type": "enemy_01",
+            "position": {
+                "x": 168,
+                "y": 113
+            }
+        },
+        {
+            "enemy_type": "enemy_01",
+            "position": {
+                "x": 186,
+                "y": 113
+            }
+        },
+        {
+            "enemy_type": "enemy_01",
+            "position": {
+                "x": 204,
+                "y": 113
+            }
+        }
+    ]
+}

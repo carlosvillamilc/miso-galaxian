@@ -1,0 +1,5 @@
+{
+    "start_game": "assets/snd/game_start.ogg",
+    "pause_game": "assets/snd/game_paused.ogg",
+    "game_over": "assets/snd/game_over.ogg"
+}

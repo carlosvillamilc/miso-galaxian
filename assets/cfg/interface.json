@@ -1,8 +1,173 @@
 {
-    "title_text_color": {
-        "r": 255,
-        "g": 0,
-        "b": 0
+    "font": "./assets/fnt/PressStart2P.ttf",
+    "title_text": {
+        "color": {
+            "r": 255,
+            "g": 0,
+            "b": 0
+        },
+        "title_speed": -50,
+        "title_offset": 240,
+        "blink_rate": 0.5,
+        "text": "PRESS Z TO START",
+        "size": 8,
+        "position": {
+            "x": 65,
+            "y": 160
+        }
+    },
+    "pause_text": {
+        "text": "PAUSE",
+        "size": 8,
+        "color": {
+            "r": 255,
+            "g": 0,
+            "b": 0
+        },
+        "position": {
+            "x": 100,
+            "y": 130
+        },
+        "blink_rate": 0.5
+    },
+    "game_start_text": {
+        "text": "START",
+        "size": 8,
+        "color": {
+            "r": 255,
+            "g": 255,
+            "b": 255
+        },
+        "position": {
+            "x": 110,
+            "y": 128
+        },
+        "time": 2
+    },
+    "1_up_label": {
+        "text": "1UP",
+        "size": 8,
+        "speed": -50,
+        "offset": 240,
+        "color": {
+            "r": 255,
+            "g": 0,
+            "b": 0
+        },
+        "position": {
+            "x": 30,
+            "y": 20
+        }
+    },
+    "1_up_text": {
+        "text": "00",
+        "size": 8,
+        "speed": -50,
+        "offset": 240,
+        "color": {
+            "r": 255,
+            "g": 255,
+            "b": 255
+        },
+        "position": {
+            "x": 55,
+            "y": 30
+        }
+    },
+    "hi_score_label": {
+        "text": "HI-SCORE",
+        "size": 8,
+        "speed": -50,
+        "offset": 240,
+        "color": {
+            "r": 255,
+            "g": 0,
+            "b": 0
+        },
+        "position": {
+            "x": 90,
+            "y": 20
+        }
+    },
+    "hi_score_text": {
+        "text": "5000",
+        "size": 8,
+        "speed": -50,
+        "offset": 240,
+        "color": {
+            "r": 30,
+            "g": 144,
+            "b": 255
+        },
+        "position": {
+            "x": 115,
+            "y": 30
+        }
+    },
+    "game_over_text": {
+        "text": "GAME OVER",
+        "size": 8,
+        "color": {
+            "r": 255,
+            "g": 255,
+            "b": 255
+        },
+        "position": {
+            "x": 95,
+            "y": 160
+        }
+    },
+    "next_level_text": {
+        "text": "LEVEL COMPLETE",
+        "size": 8,
+        "color": {
+            "r": 255,
+            "g": 255,
+            "b": 255
+        },
+        "position": {
+            "x": 70,
+            "y": 150
+        }
+    },
+    "get_ready_text": {
+        "text": "GET READY FOR THE NEXT LEVEL",
+        "size": 8,
+        "color": {
+            "r": 255,
+            "g": 0,
+            "b": 0
+        },
+        "position": {
+            "x": 20,
+            "y": 170
+        }
+    },
+    "editor_mode": {
+        "text": "EDITOR MODE - PRESS ENTER TO SAVE LEVEL AS editor_level.json",
+        "size": 6,
+        "color": {
+            "r": 255,
+            "g": 50,
+            "b": 50
+        },
+        "position": {
+            "x": 20,
+            "y": 10
+        }
+    },
+    "editor_mode_save": {
+        "text": "editor_level.json SAVED!",
+        "size": 6,
+        "color": {
+            "r": 255,
+            "g": 255,
+            "b": 0
+        },
+        "position": {
+            "x": 20,
+            "y": 70
+        }
     },
     "normal_text_color": {
         "r": 255,
@@ -14,5 +179,41 @@
         "g": 144,
         "b": 255
     },
-    "high_score_max_value": 1000
+    "high_score_max_value": 1000,
+    "game_logo": {
+        "image": "./assets/img/invaders_logo_title.png",
+        "pos": {
+            "x": 128,
+            "y": 60
+        },
+        "logo_speed": -50,
+        "logo_offset": 240
+    },
+    "lives": {
+        "image": "./assets/img/invaders_life.png",
+        "position": {
+            "x": 165,
+            "y": 32
+        }
+    },
+    "level_flag": {
+        "image": "./assets/img/invaders_level_flag.png",
+        "position": {
+            "x": 200,
+            "y": 28
+        }
+    },
+    "level_text": {
+        "text": "",
+        "size": 8,
+        "color": {
+            "r": 255,
+            "g": 255,
+            "b": 255
+        },
+        "position": {
+            "x": 220,
+            "y": 28
+        }
+    }
 }
