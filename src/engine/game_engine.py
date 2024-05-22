@@ -31,7 +31,7 @@ class GameEngine:
                 self.window_cfg.get("size").get("w"),
                 self.window_cfg.get("size").get("h"),
             ),
-            pygame.SCALED,
+            0,
         )
         self.is_running = False
 
