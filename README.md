@@ -17,6 +17,7 @@ El videojuego se basa en el juego clásico "Galaxian" de la Nintento Entertainme
 - Disparo de aleatorios de enemigos a jugador.
 - Lanzamiento aleatorio de enemigos hacia el jugador.
 - Contador de puntaje de acuerdo con el valor obtenido al eliminar cada enemigo, sea disparando o chocando contra él.
+- Puntaje récord que será actualizado si el puntaje del juego en curso lo supera.
 - Un sistema de vidas que se va descontando a medida que el jugador va siendo atacado.
 - Letrero de "game over" al finalizar el contador de vidas del jugador.
 - Letrero de preparación antes del cambio de nivel cuando este es superado (se eliminaron todos los enemigos).
