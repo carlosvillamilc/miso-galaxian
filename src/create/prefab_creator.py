@@ -3,6 +3,7 @@ import esper
 import random
 
 from src.ecs.components.c_steering import CSteering
+from src.ecs.components.editor.c_editor_draggable import CEditorDraggable
 from src.ecs.components.tags.c_tag_bullet_enemy import CTagBulletEnemy
 from src.ecs.components.tags.c_tag_bullet_player import CTagBulletPlayer
 from src.ecs.components.tags.c_tag_enemy_ghost import CTagEnemyGhost
@@ -28,6 +29,7 @@ from src.ecs.components.tags.c_tag_explosion import CTagExplosion
 from src.ecs.components.tags.c_tag_enemy import CTagEnemy
 from src.ecs.components.tags.c_tag_score import CTagScore
 
+interface_data = ServiceLocator.configs_service.get("assets/cfg/interface.json")
 
 def create_background(ecs_world: esper.World):
     background_data = ServiceLocator.configs_service.get("assets/cfg/starfield.json")
@@ -62,7 +64,6 @@ def create_background(ecs_world: esper.World):
         ecs_world.add_component(star_entity, CBlink(blink_rate, current_blink_rate))
         ecs_world.add_component(star_entity, CTagStar())
 
-
 def create_sprite(
     ecs_world: esper.World,
     pos: pygame.Vector2,
@@ -74,7 +75,6 @@ def create_sprite(
     ecs_world.add_component(sprite_entity, CVelocity(vel.copy()))
     ecs_world.add_component(sprite_entity, CSurface.from_surface(surface))
     return sprite_entity
-
 
 def create_square(
     ecs_world: esper.World,
@@ -89,9 +89,7 @@ def create_square(
     ecs_world.add_component(square_entity, CVelocity(vel))
     return square_entity
 
-
 def create_title_logo(ecs_world: esper.World):
-    interface_data = ServiceLocator.configs_service.get("assets/cfg/interface.json")
     logo_data = interface_data["game_logo"]
     logo_surface = ServiceLocator.images_service.get(logo_data["image"])
 
@@ -106,7 +104,6 @@ def create_title_logo(ecs_world: esper.World):
         logo_entity,
         CVerticalCard(logo_data["logo_speed"], pos.y + logo_data["logo_offset"], pos.y),
     )
-
 
 def create_player(ecs_world: esper.World):
     player_data = ServiceLocator.configs_service.get("assets/cfg/player.json")
@@ -132,7 +129,6 @@ def create_player(ecs_world: esper.World):
         player_surface,
     )
 
-
 def create_input_player(ecs_world: esper.World):
     # keyboard
     input_left = ecs_world.create_entity()
@@ -145,7 +141,6 @@ def create_input_player(ecs_world: esper.World):
     ecs_world.add_component(input_right, CInputCommand("PLAYER_RIGHT", pygame.K_RIGHT))
     ecs_world.add_component(input_fire, CInputCommand("PLAYER_FIRE", pygame.K_z))
     ecs_world.add_component(pause_game, CInputCommand("PAUSE_GAME", pygame.K_p))
-
 
 def create_player_bullet(
     ecs_world: esper.World, player_position: pygame.Vector2, player_size: pygame.Vector2
@@ -176,7 +171,6 @@ def create_player_bullet(
     ecs_world.add_component(bullet_entity, CTagBulletPlayer())
     ServiceLocator.sounds_service.play(bullet_data["player"]["sound"])
 
-
 def create_enemy_bullet(
     ecs_world: esper.World, enemy_position: pygame.Vector2, enemy_size: pygame.Vector2
 ):
@@ -202,9 +196,7 @@ def create_enemy_bullet(
     )
 
     bullet_entity = create_square(ecs_world, size, position, vel, color)
-
     ecs_world.add_component(bullet_entity, CTagBulletEnemy())
-
 
 def create_text(
     world: esper.World,
@@ -219,7 +211,6 @@ def create_text(
     return text_entity
 
 def create_press_start_game_text(ecs_world: esper.World) -> None:
-    interface_data = ServiceLocator.configs_service.get("assets/cfg/interface.json")
     title_text_data = interface_data["title_text"]
     title_text_color = pygame.color.Color(
         title_text_data["color"]["r"],
@@ -253,9 +244,7 @@ def create_press_start_game_text(ecs_world: esper.World) -> None:
         ),
     )
 
-
 def create_paused_text(ecs_world: esper.World):
-    interface_data = ServiceLocator.configs_service.get("assets/cfg/interface.json")
     pause_text_data = interface_data["pause_text"]
     font = ServiceLocator.fonts_service.get(
         interface_data["font"], pause_text_data["size"]
@@ -274,9 +263,25 @@ def create_paused_text(ecs_world: esper.World):
     ecs_world.add_component(pause_text, CBlink(blink_rate))
     return pause_text
 
+def create_editor_text(world:esper.World):
+    editor_text_data = interface_data["editor_mode"]
+    font = ServiceLocator.fonts_service.get(interface_data["font"], editor_text_data["size"])
+    color = pygame.Color(editor_text_data["color"]["r"], editor_text_data["color"]["g"], editor_text_data["color"]["b"])
+    position = pygame.Vector2(editor_text_data["position"]["x"], editor_text_data["position"]["y"])
+    text = editor_text_data["text"]
+    editor_text = create_text(world, text, font, color, position)
+    return editor_text
+
+def create_editor_text_saved(world:esper.World):
+    editor_text_saved_data = interface_data["editor_mode_save"]
+    font = ServiceLocator.fonts_service.get(interface_data["font"], editor_text_saved_data["size"])
+    color = pygame.Color(editor_text_saved_data["color"]["r"], editor_text_saved_data["color"]["g"], editor_text_saved_data["color"]["b"])
+    position = pygame.Vector2(editor_text_saved_data["position"]["x"], editor_text_saved_data["position"]["y"])
+    text = editor_text_saved_data["text"]
+    editor_text_saved = create_text(world, text, font, color, position)
+    return editor_text_saved
 
 def create_game_start_text(ecs_world: esper.World) -> int:
-    interface_data = ServiceLocator.configs_service.get("assets/cfg/interface.json")
     game_start_text_data = interface_data["game_start_text"]
     font = ServiceLocator.fonts_service.get(
         interface_data["font"], game_start_text_data["size"]
@@ -313,7 +318,6 @@ def create_explosion(ecs_world: esper.World, pos: pygame.Vector2, type: str):
     ServiceLocator.sounds_service.play(explosion_data["sound"])
     return explosion_entity
 
-
 def create_enemy(
     ecs_world: esper.World,
     pos: pygame.Vector2,
@@ -321,45 +325,41 @@ def create_enemy(
     score_value: float,
     image_path: str,
     animations: dict,
-    index:int
+    index:int,
+    enemy_type:str
 ) -> None:
     image = ServiceLocator.images_service.get(image_path)
     enemy_entity = create_sprite(ecs_world, pos, vel, image)
-    ecs_world.add_component(enemy_entity, CTagEnemy(score_value, index))
+    ecs_world.add_component(enemy_entity, CTagEnemy(score_value, index, enemy_type))
     ecs_world.add_component(enemy_entity, CAnimation(animations))
     ecs_world.add_component(enemy_entity, CSteering())
+    ecs_world.add_component(enemy_entity, CEditorDraggable())
     enemy_ghost_entity = ecs_world.create_entity()
     ecs_world.add_component(enemy_ghost_entity, CTransform(pos))
     ecs_world.add_component(enemy_ghost_entity, CVelocity(vel))
     ecs_world.add_component(enemy_ghost_entity, CTagEnemyGhost(index))
 
-def create_all_enemies(ecs_world: esper.World):
-    enemies_level = ServiceLocator.configs_service.get("assets/cfg/level_1.json")
+def create_all_enemies(ecs_world: esper.World, current_level:int):
+    if current_level % 2 != 0:
+        enemies_level = ServiceLocator.configs_service.get("assets/cfg/level_1.json")
+    else:
+        enemies_level = ServiceLocator.configs_service.get("assets/cfg/level_2.json")    
+    
     enemies_info = enemies_level["enemies_info"]
     enemies_data = ServiceLocator.configs_service.get("assets/cfg/enemies.json")
     count = 0
 
     for enemy_info in enemies_info:
-        enemy_config = None
-        if enemy_info["enemy_type"] == "Type1":
-            enemy_config = enemies_data["enemy_01"]
-        elif enemy_info["enemy_type"] == "Type2":
-            enemy_config = enemies_data["enemy_02"]
-        elif enemy_info["enemy_type"] == "Type3":
-            enemy_config = enemies_data["enemy_03"]
-        elif enemy_info["enemy_type"] == "Type4":
-            enemy_config = enemies_data["enemy_04"]
-
+        enemy_config = enemies_data[enemy_info["enemy_type"]]
         score_value = enemy_config["score_value"]
         image = enemy_config["image"]
         animations = enemy_config["animations"]
-        vel = pygame.Vector2(1,0) * enemies_level["velocity"]
-        create_enemy(ecs_world, pygame.Vector2(enemy_info["position"]["x"], enemy_info["position"]["y"]), vel, score_value, image, animations, count)
+        pos = pygame.Vector2(enemy_info["position"]["x"], enemy_info["position"]["y"])
+        vel = pygame.Vector2(1, 0) * enemies_level["velocity"]
+        create_enemy(ecs_world, pos, vel, score_value, image, animations, count, enemy_info["enemy_type"])
         count += 1
 
 def create_menu_text(ecs_world: esper.World):
-    interface_data = ServiceLocator.configs_service.get("assets/cfg/interface.json")
-
     # 1UP Label
     one_up_label_data = interface_data["1_up_label"]
     one_up_label_color = pygame.color.Color(
@@ -492,7 +492,6 @@ def create_menu_text(ecs_world: esper.World):
 
 
 def show_game_over(ecs_world: esper.World):
-    interface_data = ServiceLocator.configs_service.get("assets/cfg/interface.json")
     game_over_text_data = interface_data["game_over_text"]
     game_over_text_color = pygame.color.Color(
         game_over_text_data["color"]["r"],
@@ -517,7 +516,6 @@ def show_game_over(ecs_world: esper.World):
 
 
 def show_next_level(ecs_world: esper.World):
-    interface_data = ServiceLocator.configs_service.get("assets/cfg/interface.json")
     next_level_text_data = interface_data["next_level_text"]
     next_level_text_color = pygame.color.Color(
         next_level_text_data["color"]["r"],
@@ -564,7 +562,6 @@ def show_next_level(ecs_world: esper.World):
 
 
 def create_lives(ecs_world: esper.World):
-    interface_data = ServiceLocator.configs_service.get("assets/cfg/interface.json")
     lives_data = interface_data["lives"]
     lives_surface = ServiceLocator.images_service.get(lives_data["image"])
     lives_pos = pygame.Vector2(lives_data["position"]["x"], lives_data["position"]["y"])
@@ -578,7 +575,6 @@ def create_lives(ecs_world: esper.World):
 
 
 def show_level(ecs_world: esper.World):
-    interface_data = ServiceLocator.configs_service.get("assets/cfg/interface.json")
     level_text_data = interface_data["level_text"]
     level_text_color = pygame.color.Color(
         level_text_data["color"]["r"],

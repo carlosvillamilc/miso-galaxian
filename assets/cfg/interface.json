@@ -143,6 +143,32 @@
             "y": 170
         }
     },
+    "editor_mode": {
+        "text": "EDITOR MODE - PRESS ENTER TO SAVE LEVEL AS editor_level.json",
+        "size": 6,
+        "color": {
+            "r": 255,
+            "g": 50,
+            "b": 50
+        },
+        "position": {
+            "x": 20,
+            "y": 10
+        }
+    },
+    "editor_mode_save": {
+        "text": "editor_level.json SAVED!",
+        "size": 6,
+        "color": {
+            "r": 255,
+            "g": 255,
+            "b": 0
+        },
+        "position": {
+            "x": 20,
+            "y": 70
+        }
+    },
     "normal_text_color": {
         "r": 255,
         "g": 255,

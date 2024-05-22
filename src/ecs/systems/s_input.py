@@ -10,6 +10,8 @@ def system_input(
     do_action: Callable[[CInputCommand], None],
 ):
     components = world.get_component(CInputCommand)
+
+    c_input:CInputCommand
     for _, c_input in components:
         if event.type == pygame.KEYDOWN and c_input.key == event.key:
             c_input.phase = CommandPhase.START

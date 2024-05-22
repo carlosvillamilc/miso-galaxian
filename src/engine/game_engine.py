@@ -8,6 +8,7 @@ from src.create.prefab_creator import create_background
 
 # Scenes
 from src.engine.scenes.scene import Scene
+from src.engine.service_locator import ServiceLocator
 from src.game.menu_scene import MenuScene
 from src.game.game_scene import GameScene
 
@@ -23,9 +24,7 @@ class GameEngine:
     def __init__(self) -> None:
 
         pygame.init()
-        
-        with open("assets/cfg/window.json", encoding="utf-8") as window_file:
-            self.window_cfg = json.load(window_file)
+        self.window_cfg = ServiceLocator.configs_service.get("assets/cfg/window.json")
         
         self.screen = pygame.display.set_mode(
             (
@@ -36,6 +35,7 @@ class GameEngine:
         )
         self.is_running = False
 
+        self._bg_color = pygame.Color(self.window_cfg["bg_color"]["r"], self.window_cfg["bg_color"]["g"], self.window_cfg["bg_color"]["b"])
         self._scenes: dict[str, Scene] = {}
         self._scenes["MENU_SCENE"] = MenuScene(self)
         self._scenes["GAME_SCENE"] = GameScene(self)
@@ -83,19 +83,12 @@ class GameEngine:
         self._current_scene.simulate(self.delta_time, self.elapsed_time)
 
     def _draw(self):
-        self.screen.fill(
-            (
-                self.window_cfg.get("bg_color").get("r"),
-                self.window_cfg.get("bg_color").get("g"),
-                self.window_cfg.get("bg_color").get("b"),
-            )
-        )
-        system_rendering(self.ecs_world, self.screen)
+        self.screen.fill(self._bg_color)
         self._current_scene.do_draw(self.screen)
         pygame.display.flip()
 
     def _handle_switch_scene(self):
-        if self._scene_name_to_switch:
+        if self._scene_name_to_switch is not None:
             self._current_scene.clean()
             self._current_scene = self._scenes[self._scene_name_to_switch]
             self._current_scene.do_create()
@@ -110,5 +103,6 @@ class GameEngine:
         pygame.quit()
 
     def _clean(self):
-        self.ecs_world.clear_database()
+        if self._current_scene is not None:
+            self._current_scene.clean()
         pygame.quit()

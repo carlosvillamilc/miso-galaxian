@@ -3,6 +3,7 @@
     "enemy_01": {
         "score_value": 30,
         "image": "assets/img/invaders_enemy_01.png",
+        "placer_image": "assets/img/enemy_01.png",
         "animations": {
             "number_frames": 5,
             "list": [
@@ -24,6 +25,7 @@
     "enemy_02": {
         "score_value": 40,
         "image": "assets/img/invaders_enemy_02.png",
+        "placer_image": "assets/img/enemy_02.png",
         "animations": {
             "number_frames": 5,
             "list": [
@@ -45,6 +47,7 @@
     "enemy_03": {
         "score_value": 50,
         "image": "assets/img/invaders_enemy_03.png",
+        "placer_image": "assets/img/enemy_03.png",
         "animations": {
             "number_frames": 5,
             "list": [
@@ -66,6 +69,7 @@
     "enemy_04": {
         "score_value": 60,
         "image": "assets/img/invaders_enemy_04.png",
+        "placer_image": "assets/img/enemy_04.png",
         "animations": {
             "number_frames": 1,
             "list": [
